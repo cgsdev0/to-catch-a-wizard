@@ -29,7 +29,6 @@ func update_grid_position():
 func calculate_grid_position():
 	var x = round(parent.position.x / grid_size.x)
 	var y = round(parent.position.y / grid_size.y)
-	print(Vector2(x,y))
 	return Vector2(x, y)
 
 

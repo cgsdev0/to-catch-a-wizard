@@ -1,13 +1,16 @@
 extends KinematicBody2D
 
 
-var has_boots = false
+export var has_boots = false
+export var has_dash = false
 
 # Tweakable constants
-export var horizontal_speed = 25
+export var horizontal_speed = 30
 export var boots_horizontal_speed = 65
-export var boots_jump_speed = 140
-export var jump_speed = 80
+export var dash_speed = 240
+export var dash_duration = 0.2
+export var boots_jump_speed = 160
+export var jump_speed = 100
 export var double_jump_speed = 370
 export var roll_speed = 300
 export var dive_horizontal_speed = 280
@@ -16,17 +19,20 @@ export var roll_duration = 0.7
 export var shoot_duration = 0.3
 export var bad_roll_modifier = 0.7
 export var arm_speed = 10
-export var gravity = 2
-export var boots_gravity = 12
+export var gravity = 4
+export var boots_gravity = 8
 export var prone_slide_decel = 10
 export var jump_cooldown = 0.1
+export var dash_cooldown = 0.2
 
 # Movement state
-enum MovementState {NORMAL, JUMPING_1, JUMPING_2}
+enum MovementState {NORMAL, JUMPING_1, JUMPING_2, DASH}
 var movement_state = MovementState.NORMAL
 var last_moved_direction = 1
 var timer = 0
 var jump_cooldown_timer = jump_cooldown
+var dash_cooldown_timer = dash_cooldown
+var dash_timer = 0.0
 var max_x = position.x
 var roll_modifier = 1
 
@@ -49,17 +55,18 @@ var velocity = Vector2()
 var rewind_speed = 1
 var rewind_delta = 0
 
-		
 func record():
 	if recording == null:
 		recording = 0.0
+		Events.emit_signal("record")
 		
 func rewind():
-	was_rewinding = false
-	rewinding = true
-	rewind_delta = 0
-	rewind_speed = 1
-	$CollisionShape2D.set_deferred("disabled", true)
+	if !rewinding:
+		rewinding = true
+		rewind_delta = 0
+		rewind_speed = 1
+		$CollisionShape2D.set_deferred("disabled", true)
+		Events.emit_signal("rewind")
 	
 func compute_rewind(delta):
 	
@@ -84,11 +91,6 @@ func compute_rewind(delta):
 				rot = rewind_state["rotation"].pop_back()
 				facing = rewind_state["facing"].pop_back()
 				playing = rewind_state["playing"].pop_back()
-	while !was_rewinding && pos == global_position:
-		pos = rewind_state["position"].pop_back()
-		rot = rewind_state["rotation"].pop_back()
-		facing = rewind_state["facing"].pop_back()
-		playing = rewind_state["playing"].pop_back()
 	was_rewinding = true
 	
 	rotation = rot
@@ -103,6 +105,7 @@ func compute_rewind(delta):
 		recording = null
 	
 
+		
 func colorize(color: Color = Color(1, 1, 1, 1)):
 	$Sprite.modulate = color
 
@@ -121,10 +124,11 @@ func _physics_process(delta: float):
 		rewind_state["position"].append(global_position)
 		rewind_state["rotation"].append(rotation)
 		
-	if has_boots:
-		velocity.y += boots_gravity * delta * 60
-	else:
-		velocity.y += gravity * delta * 60
+	if movement_state != MovementState.DASH:
+		if has_boots:
+			velocity.y += boots_gravity * delta * 60
+		else:
+			velocity.y += gravity * delta * 60
 
 	timer += delta
 	jump_cooldown_timer += delta
@@ -133,6 +137,7 @@ func _physics_process(delta: float):
 
 	# State machine transitions
 	if is_on_floor():
+		dash_cooldown_timer += delta
 		match movement_state:
 			MovementState.JUMPING_1, MovementState.JUMPING_2:
 				jump_cooldown_timer = 0
@@ -157,8 +162,21 @@ func _physics_process(delta: float):
 			else:
 				velocity.y -= jump_speed
 			movement_state = MovementState.JUMPING_1
+	
+	if Input.is_action_just_pressed("dash") and has_dash and movement_state != MovementState.DASH:
+		record()
+		if dash_cooldown_timer >= dash_cooldown:
+			dash_timer = 0.0
+			velocity.y = 0
+			velocity.x = dash_speed * last_moved_direction
+			movement_state = MovementState.DASH
 
 	match movement_state:
+		MovementState.DASH:
+			dash_cooldown_timer = 0.0
+			dash_timer += delta
+			if dash_timer >= dash_duration:
+				movement_state = MovementState.NORMAL
 		MovementState.NORMAL, MovementState.JUMPING_1, MovementState.JUMPING_2:
 			velocity.x = 0
 			if Input.is_action_pressed("ui_right"):
