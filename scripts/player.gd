@@ -1,9 +1,13 @@
 extends KinematicBody2D
 
 
+var has_boots = false
+
 # Tweakable constants
-export var horizontal_speed = 200
-export var jump_speed = 500
+export var horizontal_speed = 25
+export var boots_horizontal_speed = 65
+export var boots_jump_speed = 140
+export var jump_speed = 80
 export var double_jump_speed = 370
 export var roll_speed = 300
 export var dive_horizontal_speed = 280
@@ -12,7 +16,8 @@ export var roll_duration = 0.7
 export var shoot_duration = 0.3
 export var bad_roll_modifier = 0.7
 export var arm_speed = 10
-export var gravity = 28
+export var gravity = 2
+export var boots_gravity = 12
 export var prone_slide_decel = 10
 export var jump_cooldown = 0.1
 
@@ -30,11 +35,14 @@ const bullet_scene = preload("res://scenes/bullet.tscn")
 const normal = Vector2(0, -1)
 
 var rewinding = false
+var was_rewinding = false
 var recording = null
 var rewind_duration = 10.0
 var rewind_state = {
 	"position": [],
 	"rotation": [],
+	"facing": [],
+	"playing": []
 }
 var velocity = Vector2()
 
@@ -47,38 +55,52 @@ func record():
 		recording = 0.0
 		
 func rewind():
+	was_rewinding = false
 	rewinding = true
 	rewind_delta = 0
 	rewind_speed = 1
 	$CollisionShape2D.set_deferred("disabled", true)
 	
 func compute_rewind(delta):
+	
 	rewind_delta += delta
 	rewind_speed = rewind_delta * 3.0
 	var pos = rewind_state["position"].pop_back()
 	var rot = rewind_state["rotation"].pop_back()
+	var facing = rewind_state["facing"].pop_back()
+	var playing = rewind_state["playing"].pop_back()
 	if !rewind_state["position"].empty() && rewind_speed > 1:
 		pos = rewind_state["position"].pop_back()
 		rot = rewind_state["rotation"].pop_back()
+		facing = rewind_state["facing"].pop_back()
+		playing = rewind_state["playing"].pop_back()
 		if !rewind_state["position"].empty() && rewind_speed > 2:
 			pos = rewind_state["position"].pop_back()
 			rot = rewind_state["rotation"].pop_back()
+			facing = rewind_state["facing"].pop_back()
+			playing = rewind_state["playing"].pop_back()
 			if !rewind_state["position"].empty() && rewind_speed > 3:
 				pos = rewind_state["position"].pop_back()
 				rot = rewind_state["rotation"].pop_back()
+				facing = rewind_state["facing"].pop_back()
+				playing = rewind_state["playing"].pop_back()
+	while !was_rewinding && pos == global_position:
+		pos = rewind_state["position"].pop_back()
+		rot = rewind_state["rotation"].pop_back()
+		facing = rewind_state["facing"].pop_back()
+		playing = rewind_state["playing"].pop_back()
+	was_rewinding = true
+	
+	rotation = rot
+	global_position = pos
+	$Sprite.play(playing)
+	$Sprite.scale.x = facing
 	
 	if rewind_state["position"].empty():
 		$CollisionShape2D.set_deferred("disabled", false)
 		rewinding = false
 		print(rewind_delta)
 		recording = null
-		global_position = pos
-		rotation = rot
-		return
-		
-	rotation = rot
-	global_position = pos
-	pass
 	
 
 func colorize(color: Color = Color(1, 1, 1, 1)):
@@ -99,7 +121,10 @@ func _physics_process(delta: float):
 		rewind_state["position"].append(global_position)
 		rewind_state["rotation"].append(rotation)
 		
-	velocity.y += gravity * delta * 60
+	if has_boots:
+		velocity.y += boots_gravity * delta * 60
+	else:
+		velocity.y += gravity * delta * 60
 
 	timer += delta
 	jump_cooldown_timer += delta
@@ -119,24 +144,33 @@ func _physics_process(delta: float):
 			MovementState.NORMAL:
 				movement_state = MovementState.JUMPING_1
 
-	if Input.is_action_just_pressed("ui_up") and movement_state == MovementState.JUMPING_1:
-		record()
-		velocity.y = -double_jump_speed
-		movement_state = MovementState.JUMPING_2
+	#if Input.is_action_just_pressed("ui_up") and movement_state == MovementState.JUMPING_1:
+	#	record()
+	#	velocity.y = -double_jump_speed
+	#	movement_state = MovementState.JUMPING_2
 		
 	if Input.is_action_pressed("ui_up") and movement_state == MovementState.NORMAL:
 		record()
 		if jump_cooldown_timer >= jump_cooldown:
-			velocity.y -= jump_speed
+			if has_boots:
+				velocity.y -= boots_jump_speed
+			else:
+				velocity.y -= jump_speed
 			movement_state = MovementState.JUMPING_1
 
 	match movement_state:
 		MovementState.NORMAL, MovementState.JUMPING_1, MovementState.JUMPING_2:
 			velocity.x = 0
 			if Input.is_action_pressed("ui_right"):
-				velocity.x += horizontal_speed
+				if has_boots:
+					velocity.x += boots_horizontal_speed
+				else:
+					velocity.x += horizontal_speed
 			if Input.is_action_pressed("ui_left"):
-				velocity.x -= horizontal_speed
+				if has_boots:
+					velocity.x -= boots_horizontal_speed
+				else:
+					velocity.x -= horizontal_speed
 			if velocity.x != 0:
 				record()
 				last_moved_direction = sign(velocity.x)
@@ -145,7 +179,11 @@ func _physics_process(delta: float):
 	match movement_state:
 		MovementState.NORMAL:
 			if velocity.x != 0:
-				$Sprite.play("run", last_moved_direction < 0)
+				if has_boots:
+				#$Sprite.play("walking", last_moved_direction < 0)
+					$Sprite.play("run")
+				else:
+					$Sprite.play("walking")
 			else:
 				$Sprite.play("idle")
 #        MovementState.SHOOTING:
@@ -158,6 +196,9 @@ func _physics_process(delta: float):
 			$Sprite.stop()
 
 	$Sprite.scale.x = last_moved_direction # move this
+	
+	rewind_state["facing"].append(last_moved_direction)
+	rewind_state["playing"].append($Sprite.animation)
 
 
 
