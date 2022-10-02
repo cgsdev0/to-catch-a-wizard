@@ -6,6 +6,10 @@ extends Area2D
 # var b = "text"
 
 export var toggle = "has_boots"
+export var title = "New Spell!"
+export var subtitle = "FIREBALL"
+export var description = "it does what you expect."
+export var has_dialog = true
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.connect("body_entered", self, "_on_Pickup_body_entered")
@@ -18,5 +22,10 @@ func _ready():
 
 
 func _on_Pickup_body_entered(body):
-	body[toggle] = true
+	if typeof(body[toggle]) == TYPE_BOOL:
+		body[toggle] = true
+	else:
+		body[toggle] += 1
+	if has_dialog:
+		Events.emit_signal("show_dialog", title, subtitle, description)
 	self.queue_free()

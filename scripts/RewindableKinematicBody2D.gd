@@ -14,13 +14,14 @@ var rewind_state = {
 var initial_pos = Vector2()
 
 func _integrate_forces(state):
+	if rewinding:
+		linear_velocity = Vector2()
+		angular_velocity = 0.0
 	if $CollisionShape2D.disabled and initial_pos == global_position:
 		global_position = initial_pos
-		$CollisionShape2D.disabled = false
+		$CollisionShape2D.set_deferred("disabled", false)
 		
 func _physics_process(delta):
-	if not rewinding:
-		print(position)
 	if not rewinding and recording: 
 		rewind_state["position"].append(global_position)
 		rewind_state["rotation"].append(rotation)
@@ -31,12 +32,22 @@ func on_record():
 	recording = true
 	
 func on_rewind():
+	rewind_delta = 0.0
 	rewinding = true
 	$CollisionShape2D.set_deferred("disabled", true)
 	
 func compute_rewind(delta):
 	rewind_delta += delta
 	var rewind_speed = rewind_delta * 3.0
+	if rewind_state["position"].empty():
+		self.angular_velocity = 0.0
+		self.gravity_scale = 0.0
+		self.linear_velocity = Vector2()
+		rewinding = false
+		recording = null
+		global_position = initial_pos
+		rotation = 0
+		return
 	var pos = rewind_state["position"].pop_back()
 	var rot = rewind_state["rotation"].pop_back()
 	if !rewind_state["position"].empty() && rewind_speed > 1:

@@ -3,13 +3,16 @@ extends KinematicBody2D
 
 export var has_boots = false
 export var has_dash = false
+export var has_lava_imm = false
+
+export var keys = 0
 
 # Tweakable constants
 export var horizontal_speed = 30
 export var boots_horizontal_speed = 65
 export var dash_speed = 240
 export var dash_duration = 0.2
-export var boots_jump_speed = 160
+export var boots_jump_speed = 190
 export var jump_speed = 100
 export var double_jump_speed = 370
 export var roll_speed = 300
@@ -64,14 +67,13 @@ func rewind():
 	if !rewinding:
 		rewinding = true
 		rewind_delta = 0
-		rewind_speed = 1
 		$CollisionShape2D.set_deferred("disabled", true)
 		Events.emit_signal("rewind")
 	
 func compute_rewind(delta):
 	
 	rewind_delta += delta
-	rewind_speed = rewind_delta * 3.0
+	var rewind_speed = rewind_delta * 3.0
 	var pos = rewind_state["position"].pop_back()
 	var rot = rewind_state["rotation"].pop_back()
 	var facing = rewind_state["facing"].pop_back()
@@ -110,11 +112,25 @@ func colorize(color: Color = Color(1, 1, 1, 1)):
 	$Sprite.modulate = color
 
 func _physics_process(delta: float):
+	if has_lava_imm:
+		self.collision_layer = self.collision_layer & 0b01111111111111011111;
+		self.collision_mask = self.collision_mask & 0b01111111111111011111;
+		
 	velocity = move_and_slide(velocity, normal)
 	if rewinding:
 		compute_rewind(delta)
 		return
 	
+	for i in get_slide_count():
+		var collision = get_slide_collision(i)
+		if collision.collider == null:
+			continue
+		if !(collision.collider.has_meta("door")):
+			continue
+		if keys >= 1:
+			collision.collider.open()
+			keys -= 1
+		
 	if recording != null:
 		recording += delta
 		if recording >= rewind_duration:
