@@ -166,5 +166,6 @@ rewind={
 
 quality/driver/driver_name="GLES2"
 2d/snapping/use_gpu_pixel_snap=true
+environment/default_clear_color=Color( 0.133333, 0.25098, 0.309804, 1 )
 environment/default_environment="res://default_env.tres"
 quality/2d/use_pixel_snap=true

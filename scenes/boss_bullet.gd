@@ -2,9 +2,7 @@ extends KinematicBody2D
 
 export var velocity = Vector2(0, 0)
 
-var explosion = preload("res://scenes/explosion.tscn")
-
-var spent = false
+var explosion = preload("res://scenes/boss_explosion.tscn")
 
 #var rewind_state = {
 #	"position": [],
@@ -51,33 +49,29 @@ var spent = false
 #
 #	if rewind_state["position"].empty():
 #		queue_free()
-		
+var player
+	
 func _physics_process(delta):
-		var space_state = get_world_2d().direct_space_state
-		var result = space_state.intersect_ray(global_position, global_position + velocity * delta * 5.0, [self])
-		if result && result.collider:
-			if result.collider.name == "Boss":
-				result.collider.teleport()
-		move(delta)
+	move(delta)
 
 func move(delta):
+	var norm = (player.global_position - global_position).normalized()
+	velocity = norm * velocity.length()
+	
 	var coll = move_and_collide(velocity * delta)
 	if coll != null:
 #		done_exploding = true
 		$Particles/A.emitting = false
 		$Particles/B.emitting = false
-		if !spent:
-			spent = true
-			var expl = explosion.instance()
-			expl.collision_layer = collision_layer & 0b111111111111111111111110
-			expl.collision_mask = collision_mask & 0b111111111111111111111110
-			expl.global_position = global_position
-			expl.get_node("CPUParticles2D").emitting = true
-			Events.emit_signal("shake")
-			get_parent().add_child(expl)
-			velocity = Vector2.ZERO;
-			yield(get_tree().create_timer(1.0), "timeout")
-			queue_free()
+		var expl = explosion.instance()
+		$CollisionShape2D.disabled = true
+		expl.global_position = global_position
+		expl.get_node("CPUParticles2D").emitting = true
+		Events.emit_signal("shake")
+		get_parent().add_child(expl)
+		velocity = Vector2.ZERO
+		yield(get_tree().create_timer(1.0), "timeout")
+		queue_free()
 		
 #	rewind_state["position"].append(position)
 #	rewind_state["done_exploding"].append(done_exploding)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=151 format=2]
+[gd_scene load_steps=163 format=2]
 
 [ext_resource path="res://shitballs.tres" type="TileSet" id=1]
 [ext_resource path="res://scripts/player.gd" type="Script" id=2]
@@ -29,20 +29,11 @@
 [ext_resource path="res://Torch.gd" type="Script" id=27]
 [ext_resource path="res://torch_door.png" type="Texture" id=28]
 [ext_resource path="res://TorchDoor.gd" type="Script" id=29]
-
-[sub_resource type="StreamTexture" id=56]
-
-[sub_resource type="StreamTexture" id=57]
-
-[sub_resource type="StreamTexture" id=58]
-
-[sub_resource type="StreamTexture" id=59]
-
-[sub_resource type="StreamTexture" id=60]
-
-[sub_resource type="StreamTexture" id=61]
-
-[sub_resource type="StreamTexture" id=62]
+[ext_resource path="res://idle_boss.png" type="Texture" id=30]
+[ext_resource path="res://Boss.gd" type="Script" id=31]
+[ext_resource path="res://fonts/m3x6orsomething.tres" type="DynamicFont" id=32]
+[ext_resource path="res://BrickSpawner.gd" type="Script" id=33]
+[ext_resource path="res://GameWin.gd" type="Script" id=34]
 
 [sub_resource type="RectangleShape2D" id=181]
 extents = Vector2( 5, 17 )
@@ -320,6 +311,66 @@ animations = [ {
 [sub_resource type="RectangleShape2D" id=177]
 extents = Vector2( 7.5, 6.5 )
 
+[sub_resource type="AtlasTexture" id=221]
+atlas = ExtResource( 30 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=222]
+atlas = ExtResource( 30 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=223]
+atlas = ExtResource( 30 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=224]
+atlas = ExtResource( 30 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=225]
+atlas = ExtResource( 30 )
+region = Rect2( 128, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=226]
+atlas = ExtResource( 30 )
+region = Rect2( 160, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=227]
+atlas = ExtResource( 30 )
+region = Rect2( 192, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=228]
+atlas = ExtResource( 30 )
+region = Rect2( 224, 0, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=229]
+animations = [ {
+"frames": [ SubResource( 221 ), SubResource( 222 ), SubResource( 223 ), SubResource( 224 ), SubResource( 225 ), SubResource( 226 ), SubResource( 227 ), SubResource( 228 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=230]
+resource_name = "hover"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 0.406126, 0.63728, 0.554785 ),
+"update": 0,
+"values": [ Vector2( 0, -7 ), Vector2( 0, -10 ), Vector2( 0, -7 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=231]
+extents = Vector2( 6.5, 12 )
+
 [sub_resource type="AtlasTexture" id=64]
 atlas = ExtResource( 3 )
 region = Rect2( 0, 0, 32, 32 )
@@ -498,6 +549,36 @@ COLOR = texColor + vec4(0.25, 0.1, 0.4, 1.0);
 [sub_resource type="ShaderMaterial" id=210]
 shader = SubResource( 209 )
 
+[sub_resource type="Animation" id=232]
+resource_name = "dead"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 0.392293, 0.732043 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=235]
+resource_name = "win"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 0.732043 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
 [sub_resource type="RectangleShape2D" id=176]
 extents = Vector2( 12, 9 )
 
@@ -584,82 +665,13 @@ animations = [ {
 [sub_resource type="RectangleShape2D" id=220]
 extents = Vector2( 2.5, 7 )
 
+[sub_resource type="RectangleShape2D" id=234]
+
 [sub_resource type="RectangleShape2D" id=174]
 extents = Vector2( 6.25, 5 )
 
 [node name="World" type="Node"]
 script = ExtResource( 8 )
-
-[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
-visible = false
-offset = Vector2( 0, -100 )
-transform = Transform2D( 1, 0, 0, 1, 0, -100 )
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground"]
-scale = Vector2( 2, 2 )
-texture = SubResource( 56 )
-centered = false
-
-[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.05, 0 )
-motion_offset = Vector2( 316, -100 )
-motion_mirroring = Vector2( 768, 0 )
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
-scale = Vector2( 2, 2 )
-texture = SubResource( 57 )
-centered = false
-
-[node name="ParallaxLayer6" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.1, 0 )
-motion_offset = Vector2( 316, -100 )
-motion_mirroring = Vector2( 768, 0 )
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer6"]
-visible = false
-scale = Vector2( 2, 2 )
-texture = SubResource( 58 )
-centered = false
-
-[node name="ParallaxLayer4" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.15, 0 )
-motion_offset = Vector2( 316, -100 )
-motion_mirroring = Vector2( 1000, 0 )
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer4"]
-scale = Vector2( 2, 2 )
-texture = SubResource( 59 )
-centered = false
-
-[node name="ParallaxLayer7" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.3, 0 )
-motion_offset = Vector2( 316, -100 )
-motion_mirroring = Vector2( 768, 0 )
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer7"]
-scale = Vector2( 2, 2 )
-texture = SubResource( 60 )
-centered = false
-
-[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.35, 0 )
-motion_offset = Vector2( 316, -100 )
-motion_mirroring = Vector2( 768, 0 )
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer3"]
-scale = Vector2( 2, 2 )
-texture = SubResource( 61 )
-centered = false
-
-[node name="ParallaxLayer8" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.4, 0 )
-motion_offset = Vector2( 316, -100 )
-motion_mirroring = Vector2( 768, 0 )
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer8"]
-scale = Vector2( 2, 2 )
-texture = SubResource( 62 )
-centered = false
 
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2( -22, 30 )
@@ -726,7 +738,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="BootsPickup2"]
 frames = SubResource( 152 )
-frame = 12
+frame = 5
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BootsPickup2"]
@@ -743,7 +755,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key1"]
 frames = SubResource( 202 )
-frame = 9
+frame = 2
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key1"]
@@ -759,7 +771,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key2"]
 frames = SubResource( 202 )
-frame = 8
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key2"]
@@ -777,7 +789,7 @@ description = "An effortless burst of speed.\\nPress 'shift' to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="DashPickup"]
 frames = SubResource( 173 )
-frame = 15
+frame = 8
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DashPickup"]
@@ -793,7 +805,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="FireballPickup"]
 frames = SubResource( 173 )
-frame = 14
+frame = 7
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FireballPickup"]
@@ -810,13 +822,14 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="LavaPickup"]
 frames = SubResource( 173 )
-frame = 14
+frame = 7
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LavaPickup"]
 shape = SubResource( 177 )
 
 [node name="Label" type="Label" parent="."]
+visible = false
 modulate = Color( 0.431373, 0.431373, 0.431373, 1 )
 margin_left = -61.0
 margin_top = 335.0
@@ -824,15 +837,65 @@ margin_right = 58.0
 margin_bottom = 389.0
 custom_colors/font_color_shadow = Color( 0.501961, 0.501961, 0.501961, 1 )
 custom_fonts/font = ExtResource( 19 )
-text = "SUPER SECRET TIME 
-LOOP SPELL ROOM
+text = "EMERGENCY TIME SPELL
+SHUT OFF
 <----"
 align = 1
 
+[node name="Boss" type="KinematicBody2D" parent="."]
+position = Vector2( -374, 352.938 )
+collision_layer = 524288
+collision_mask = 524288
+script = ExtResource( 31 )
+x2 = -262
+
+[node name="Label" type="Label" parent="Boss"]
+margin_left = 16.0
+margin_top = -35.3121
+margin_right = 96.0
+margin_bottom = 41.6879
+size_flags_vertical = 0
+custom_colors/font_color = Color( 0.407843, 0.94902, 0.690196, 1 )
+custom_fonts/font = ExtResource( 32 )
+autowrap = true
+
+[node name="Ow" type="Label" parent="Boss"]
+visible = false
+margin_left = 16.0
+margin_top = -35.3121
+margin_right = 96.0
+margin_bottom = 41.6879
+size_flags_vertical = 0
+custom_colors/font_color = Color( 0.407843, 0.94902, 0.690196, 1 )
+custom_fonts/font = ExtResource( 32 )
+text = "oww"
+autowrap = true
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Boss"]
+position = Vector2( 0, -8.03538 )
+frames = SubResource( 229 )
+frame = 7
+playing = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Boss"]
+pause_mode = 2
+autoplay = "hover"
+method_call_mode = 1
+anims/hover = SubResource( 230 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boss"]
+position = Vector2( 1, -8.93796 )
+shape = SubResource( 231 )
+
 [node name="Player" type="KinematicBody2D" parent="."]
-collision_layer = 8421503
+collision_layer = 8687743
 collision_mask = 32847
 script = ExtResource( 2 )
+has_boots = true
+has_dash = true
+has_fireball = true
+has_lava_imm = true
+respawn_from_boss = Vector2( -6, 400 )
 
 [node name="Sprite" type="AnimatedSprite" parent="Player"]
 frames = SubResource( 72 )
@@ -976,6 +1039,54 @@ material = SubResource( 210 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 1, 1, 1, 0 )
+
+[node name="DeathFade" type="ColorRect" parent="Player/Position2D/Camera2D/CanvasLayer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0705882, 0.27451, 0.196078, 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Position2D/Camera2D/CanvasLayer/DeathFade"]
+anims/dead = SubResource( 232 )
+
+[node name="GameWin" type="ColorRect" parent="Player/Position2D/Camera2D/CanvasLayer"]
+pause_mode = 2
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 21 )
+color = Color( 0.254902, 0.141176, 0.462745, 1 )
+script = ExtResource( 34 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Position2D/Camera2D/CanvasLayer/GameWin"]
+anims/win = SubResource( 235 )
+
+[node name="Label" type="Label" parent="Player/Position2D/Camera2D/CanvasLayer/GameWin"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_colors/font_color = Color( 0.913725, 0.901961, 0.34902, 1 )
+text = "Thanks for playing!"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="Player/Position2D/Camera2D/CanvasLayer/GameWin"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -8.0
+text = "~ Ludum Dare 51 entry by badcop ~"
+align = 1
+valign = 2
+
+[node name="Label" type="Label" parent="Player"]
+visible = false
+margin_left = 15.0
+margin_top = -23.0
+margin_right = 115.0
+margin_bottom = 4.0
+custom_fonts/font = ExtResource( 32 )
+text = "can't believe my nemesis trapped me here..."
+autowrap = true
 
 [node name="Area2D" type="Area2D" parent="."]
 position = Vector2( 67, 21 )
@@ -1125,6 +1236,24 @@ animation = "off"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Torch5"]
 position = Vector2( -0.5, 4 )
 shape = SubResource( 220 )
+
+[node name="BrickSpawner" type="StaticBody2D" parent="."]
+position = Vector2( -376, 262 )
+collision_layer = 65536
+collision_mask = 0
+script = ExtResource( 33 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BrickSpawner"]
+shape = SubResource( 234 )
+
+[node name="BrickSpawner2" type="StaticBody2D" parent="."]
+position = Vector2( -254, 262 )
+collision_layer = 65536
+collision_mask = 0
+script = ExtResource( 33 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BrickSpawner2"]
+shape = SubResource( 234 )
 
 [node name="Fall1" type="Sprite" parent="."]
 position = Vector2( 67, 21 )

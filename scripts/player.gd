@@ -6,6 +6,8 @@ export var has_dash = false
 export var has_fireball = false
 export var has_lava_imm = false
 
+export var respawn_from_boss = Vector2()
+
 var bossFight = false
 var wasBossFight = false
 
@@ -66,6 +68,22 @@ var rewind_delta = 0
 
 var init_global
 
+var dead = false
+
+func kill_player():
+	if dead:
+		return
+	dead = true
+	$Position2D/Camera2D/CanvasLayer/DeathFade.modulate = Color.transparent
+	$Position2D/Camera2D/CanvasLayer/DeathFade.visible = true
+	$Position2D/Camera2D/CanvasLayer/DeathFade/AnimationPlayer.play("dead")
+	yield(get_tree().create_timer(0.5), "timeout")
+	boss.reset_boss()
+	position = respawn_from_boss
+	yield(get_tree().create_timer(0.5), "timeout")
+	$Position2D/Camera2D/CanvasLayer/DeathFade.visible = false
+	dead = false
+	
 func record():
 	if recording == null:
 		recording = 0.0
@@ -116,6 +134,8 @@ func colorize(color: Color = Color(1, 1, 1, 1)):
 	$Sprite.modulate = color
 
 func _physics_process(delta: float):
+	if dead:
+		return
 	if has_lava_imm:
 		self.collision_layer = self.collision_layer & 0b011111111111111111011111;
 		self.collision_mask = self.collision_mask & 0b011111111111111111011111;
@@ -174,6 +194,9 @@ func _physics_process(delta: float):
 		var norm = (get_global_mouse_position() - position).normalized()
 		bullet.velocity =  norm * 300.0
 		bullet.global_position = global_position + norm * 20.0
+		if boss != null && boss.phase > 1:
+			bullet.collision_mask |= 0b10000000000000000000
+			bullet.collision_layer |= 0b10000000000000000000
 		get_parent().add_child(bullet)
 	if movement_state != MovementState.DASH:
 		if has_boots:
@@ -284,7 +307,9 @@ func _physics_process(delta: float):
 	#if position.x < max_x - get_viewport_rect().size.x / 2:
 	#    position.x = max_x - get_viewport_rect().size.x / 2
 
+var boss
 func _ready():
+	boss = get_tree().get_root().find_node("Boss", true, false)
 	init_global = global_position
 # would be great to do this less poorly
 func normalizeAngle(angle: float):
