@@ -74,6 +74,7 @@ func kill_player():
 	if dead:
 		return
 	dead = true
+	$DeathSound.play()
 	$Position2D/Camera2D/CanvasLayer/DeathFade.modulate = Color.transparent
 	$Position2D/Camera2D/CanvasLayer/DeathFade.visible = true
 	$Position2D/Camera2D/CanvasLayer/DeathFade/AnimationPlayer.play("dead")
@@ -83,14 +84,29 @@ func kill_player():
 	yield(get_tree().create_timer(0.5), "timeout")
 	$Position2D/Camera2D/CanvasLayer/DeathFade.visible = false
 	dead = false
+
+func play_pickup_key_sound():
+	$PickupKeySound.play()
+	
+func lava_death():
+	$DeathSound.play()
+	
+var speedrun_timer = null
+
+func _process(delta):
+	if speedrun_timer != null:
+		speedrun_timer += delta
 	
 func record():
+	if speedrun_timer == null:
+		speedrun_timer = 0.0
 	if recording == null:
 		recording = 0.0
 		Events.emit_signal("record")
 		
 func rewind():
 	if !rewinding:
+		$RewindSound.play()
 		rewinding = true
 		rewind_delta = 0
 		$CollisionShape2D.set_deferred("disabled", true)
@@ -125,6 +141,7 @@ func compute_rewind(delta):
 		global_position = init_global
 		$CollisionShape2D.set_deferred("disabled", false)
 		rewinding = false
+		$RewindSound.stop()
 		print(rewind_delta)
 		recording = null
 	

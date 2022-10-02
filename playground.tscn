@@ -1,4 +1,4 @@
-[gd_scene load_steps=170 format=2]
+[gd_scene load_steps=172 format=2]
 
 [ext_resource path="res://shitballs.tres" type="TileSet" id=1]
 [ext_resource path="res://scripts/player.gd" type="Script" id=2]
@@ -41,6 +41,8 @@
 [ext_resource path="res://sounds/dash.wav" type="AudioStream" id=39]
 [ext_resource path="res://sounds/door_open.wav" type="AudioStream" id=40]
 [ext_resource path="res://sounds/pickup_key.wav" type="AudioStream" id=41]
+[ext_resource path="res://sounds/death.wav" type="AudioStream" id=42]
+[ext_resource path="res://sounds/rewind.wav" type="AudioStream" id=43]
 
 [sub_resource type="RectangleShape2D" id=181]
 extents = Vector2( 5, 17 )
@@ -754,7 +756,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="BootsPickup2"]
 frames = SubResource( 152 )
-frame = 7
+frame = 2
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BootsPickup2"]
@@ -771,14 +773,11 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key1"]
 frames = SubResource( 202 )
-frame = 4
+frame = 19
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key1"]
 shape = SubResource( 178 )
-
-[node name="PickupKeySound" type="AudioStreamPlayer" parent="Key1"]
-stream = ExtResource( 41 )
 
 [node name="Key2" type="Area2D" parent="."]
 position = Vector2( 117, -174 )
@@ -790,15 +789,12 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key2"]
 frames = SubResource( 202 )
-frame = 3
+frame = 18
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key2"]
 position = Vector2( -1.5, 0 )
 shape = SubResource( 203 )
-
-[node name="PickupKeySound" type="AudioStreamPlayer" parent="Key2"]
-stream = ExtResource( 41 )
 
 [node name="DashPickup" type="Area2D" parent="."]
 position = Vector2( 228, -20 )
@@ -811,7 +807,7 @@ description = "An effortless burst of speed.\\nPress 'shift' to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="DashPickup"]
 frames = SubResource( 173 )
-frame = 10
+frame = 5
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DashPickup"]
@@ -827,7 +823,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="FireballPickup"]
 frames = SubResource( 173 )
-frame = 9
+frame = 4
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FireballPickup"]
@@ -844,7 +840,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="LavaPickup"]
 frames = SubResource( 173 )
-frame = 9
+frame = 4
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LavaPickup"]
@@ -894,8 +890,9 @@ text = "oww"
 autowrap = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Boss"]
-position = Vector2( 0, -9.10914 )
+position = Vector2( 0, -7.09476 )
 frames = SubResource( 229 )
+frame = 3
 playing = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Boss"]
@@ -917,7 +914,6 @@ has_dash = true
 has_fireball = true
 has_lava_imm = true
 respawn_from_boss = Vector2( -6, 400 )
-keys = 2
 
 [node name="Sprite" type="AnimatedSprite" parent="Player"]
 frames = SubResource( 72 )
@@ -1057,6 +1053,7 @@ anims/Fade = SubResource( 206 )
 
 [node name="PickupItemSound" type="AudioStreamPlayer" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
 stream = ExtResource( 37 )
+volume_db = -7.913
 
 [node name="BlipSelectSound" type="AudioStreamPlayer" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
 stream = ExtResource( 38 )
@@ -1106,6 +1103,14 @@ text = "~ Ludum Dare 51 entry by badcop ~"
 align = 1
 valign = 2
 
+[node name="TimerLabel" type="Label" parent="Player/Position2D/Camera2D/CanvasLayer/GameWin"]
+anchor_right = 1.0
+anchor_bottom = 0.31
+margin_bottom = -8.0
+text = "Your time was 0:00"
+align = 1
+valign = 2
+
 [node name="Label" type="Label" parent="Player"]
 visible = false
 margin_left = 15.0
@@ -1121,12 +1126,26 @@ current = true
 
 [node name="JumpSound" type="AudioStreamPlayer" parent="Player"]
 stream = ExtResource( 35 )
+volume_db = -9.043
 
 [node name="WeakJumpSound" type="AudioStreamPlayer" parent="Player"]
 stream = ExtResource( 36 )
 
 [node name="DashSound" type="AudioStreamPlayer" parent="Player"]
 stream = ExtResource( 39 )
+volume_db = -9.044
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource( 42 )
+volume_db = -6.227
+
+[node name="PickupKeySound" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource( 41 )
+volume_db = -6.222
+
+[node name="RewindSound" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource( 43 )
+volume_db = -6.222
 
 [node name="Area2D" type="Area2D" parent="."]
 position = Vector2( 67, 21 )

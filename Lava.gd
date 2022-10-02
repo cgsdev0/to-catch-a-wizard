@@ -12,6 +12,8 @@ func _ready():
 	pass # Replace with function body.
 
 func on_body_enter(body):
+	if body.has_method("lava_death"):
+		body.lava_death()
 	yield(get_tree().create_timer(0.5), "timeout")
 	body.rewind()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
