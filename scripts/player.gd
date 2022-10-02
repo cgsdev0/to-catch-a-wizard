@@ -238,13 +238,16 @@ func _physics_process(delta: float):
 		if jump_cooldown_timer >= jump_cooldown:
 			if has_boots:
 				velocity.y -= boots_jump_speed
+				$JumpSound.play()
 			else:
 				velocity.y -= jump_speed
+				$WeakJumpSound.play()
 			movement_state = MovementState.JUMPING_1
 	
 	if Input.is_action_just_pressed("dash") and has_dash and movement_state != MovementState.DASH:
 		record()
 		if dash_cooldown_timer >= dash_cooldown:
+			$DashSound.play()
 			dash_timer = 0.0
 			velocity.y = 0
 			velocity.x = dash_speed * last_moved_direction

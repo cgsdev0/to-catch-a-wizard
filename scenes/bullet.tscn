@@ -1,5 +1,6 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
+[ext_resource path="res://sounds/fireball_launch.wav" type="AudioStream" id=1]
 [ext_resource path="res://scenes/bullet.gd" type="Script" id=2]
 [ext_resource path="res://fire_particle.png" type="Texture" id=3]
 
@@ -85,3 +86,6 @@ initial_velocity_random = 1.0
 scale_amount = 0.5
 scale_amount_random = 0.59
 scale_amount_curve = SubResource( 7 )
+
+[node name="LaunchSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 1 )

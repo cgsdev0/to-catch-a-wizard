@@ -10,6 +10,7 @@ export var should_kill_player = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.connect("body_entered", self, "on_body_enter")
+	$AudioStreamPlayer2D.play()
 	
 	
 	pass # Replace with function body.

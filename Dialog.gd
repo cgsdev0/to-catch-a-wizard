@@ -12,6 +12,7 @@ func _ready():
 	pass # Replace with function body.
 
 func on_show_dialog(title, subtitle, description):
+	$PickupItemSound.play()
 	get_tree().paused = true
 	$Dialog/Background/MarginContainer/VBoxContainer/Title.text = title
 	$Dialog/Background/MarginContainer/VBoxContainer/Subtext.text = subtitle
@@ -21,7 +22,8 @@ func on_show_dialog(title, subtitle, description):
 	self.visible = true
 
 func _input(event):
-	if event.is_action_pressed("ui_accept"):
+	if event.is_action_pressed("ui_accept") && self.visible:
+		$BlipSelectSound.play()
 		$AnimationPlayer.play_backwards("Fade")
 		yield(get_tree().create_timer(0.25), "timeout")
 		self.visible = false

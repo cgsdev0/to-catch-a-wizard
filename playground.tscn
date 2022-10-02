@@ -1,4 +1,4 @@
-[gd_scene load_steps=163 format=2]
+[gd_scene load_steps=170 format=2]
 
 [ext_resource path="res://shitballs.tres" type="TileSet" id=1]
 [ext_resource path="res://scripts/player.gd" type="Script" id=2]
@@ -34,6 +34,13 @@
 [ext_resource path="res://fonts/m3x6orsomething.tres" type="DynamicFont" id=32]
 [ext_resource path="res://BrickSpawner.gd" type="Script" id=33]
 [ext_resource path="res://GameWin.gd" type="Script" id=34]
+[ext_resource path="res://sounds/jump.wav" type="AudioStream" id=35]
+[ext_resource path="res://sounds/weak_jump.wav" type="AudioStream" id=36]
+[ext_resource path="res://sounds/power_up.wav" type="AudioStream" id=37]
+[ext_resource path="res://sounds/blip_select.wav" type="AudioStream" id=38]
+[ext_resource path="res://sounds/dash.wav" type="AudioStream" id=39]
+[ext_resource path="res://sounds/door_open.wav" type="AudioStream" id=40]
+[ext_resource path="res://sounds/pickup_key.wav" type="AudioStream" id=41]
 
 [sub_resource type="RectangleShape2D" id=181]
 extents = Vector2( 5, 17 )
@@ -699,6 +706,9 @@ texture = ExtResource( 16 )
 position = Vector2( -1, -1 )
 shape = SubResource( 181 )
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Door"]
+stream = ExtResource( 40 )
+
 [node name="TorchDoor" type="StaticBody2D" parent="."]
 position = Vector2( -150, -34 )
 collision_layer = 64
@@ -714,6 +724,9 @@ texture = ExtResource( 28 )
 position = Vector2( -495, 33 )
 shape = SubResource( 181 )
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="TorchDoor"]
+stream = ExtResource( 40 )
+
 [node name="Door2" type="StaticBody2D" parent="."]
 position = Vector2( -157, 126 )
 collision_layer = 64
@@ -727,6 +740,9 @@ texture = ExtResource( 16 )
 position = Vector2( -1, -1 )
 shape = SubResource( 181 )
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Door2"]
+stream = ExtResource( 40 )
+
 [node name="BootsPickup2" type="Area2D" parent="."]
 position = Vector2( -114, -9 )
 collision_layer = 0
@@ -738,7 +754,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="BootsPickup2"]
 frames = SubResource( 152 )
-frame = 5
+frame = 7
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BootsPickup2"]
@@ -755,11 +771,14 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key1"]
 frames = SubResource( 202 )
-frame = 2
+frame = 4
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key1"]
 shape = SubResource( 178 )
+
+[node name="PickupKeySound" type="AudioStreamPlayer" parent="Key1"]
+stream = ExtResource( 41 )
 
 [node name="Key2" type="Area2D" parent="."]
 position = Vector2( 117, -174 )
@@ -771,12 +790,15 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key2"]
 frames = SubResource( 202 )
-frame = 1
+frame = 3
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key2"]
 position = Vector2( -1.5, 0 )
 shape = SubResource( 203 )
+
+[node name="PickupKeySound" type="AudioStreamPlayer" parent="Key2"]
+stream = ExtResource( 41 )
 
 [node name="DashPickup" type="Area2D" parent="."]
 position = Vector2( 228, -20 )
@@ -789,7 +811,7 @@ description = "An effortless burst of speed.\\nPress 'shift' to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="DashPickup"]
 frames = SubResource( 173 )
-frame = 8
+frame = 10
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DashPickup"]
@@ -805,7 +827,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="FireballPickup"]
 frames = SubResource( 173 )
-frame = 7
+frame = 9
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FireballPickup"]
@@ -822,7 +844,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="LavaPickup"]
 frames = SubResource( 173 )
-frame = 7
+frame = 9
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LavaPickup"]
@@ -872,9 +894,8 @@ text = "oww"
 autowrap = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Boss"]
-position = Vector2( 0, -8.03538 )
+position = Vector2( 0, -9.10914 )
 frames = SubResource( 229 )
-frame = 7
 playing = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Boss"]
@@ -896,6 +917,7 @@ has_dash = true
 has_fireball = true
 has_lava_imm = true
 respawn_from_boss = Vector2( -6, 400 )
+keys = 2
 
 [node name="Sprite" type="AnimatedSprite" parent="Player"]
 frames = SubResource( 72 )
@@ -1033,6 +1055,12 @@ autowrap = true
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
 anims/Fade = SubResource( 206 )
 
+[node name="PickupItemSound" type="AudioStreamPlayer" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
+stream = ExtResource( 37 )
+
+[node name="BlipSelectSound" type="AudioStreamPlayer" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
+stream = ExtResource( 38 )
+
 [node name="RewindEffect" type="ColorRect" parent="Player/Position2D/Camera2D/CanvasLayer"]
 visible = false
 material = SubResource( 210 )
@@ -1087,6 +1115,18 @@ margin_bottom = 4.0
 custom_fonts/font = ExtResource( 32 )
 text = "can't believe my nemesis trapped me here..."
 autowrap = true
+
+[node name="Listener2D" type="Listener2D" parent="Player"]
+current = true
+
+[node name="JumpSound" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource( 35 )
+
+[node name="WeakJumpSound" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource( 36 )
+
+[node name="DashSound" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource( 39 )
 
 [node name="Area2D" type="Area2D" parent="."]
 position = Vector2( 67, 21 )

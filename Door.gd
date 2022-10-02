@@ -7,6 +7,7 @@ func open():
 	if eaten_key:
 		return false
 	eaten_key = true
+	$AudioStreamPlayer2D.play()
 	$CollisionPolygon2D.disabled = true
 	$Door.texture = preload("res://door_open.png")
 	return true

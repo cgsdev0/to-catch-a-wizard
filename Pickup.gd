@@ -26,6 +26,7 @@ func _on_Pickup_body_entered(body):
 		body[toggle] = true
 	else:
 		body[toggle] += 1
+		$PickupKeySound.play()
 	if has_dialog:
 		Events.emit_signal("show_dialog", title, subtitle, description)
 	self.queue_free()

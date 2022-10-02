@@ -52,6 +52,8 @@ var spent = false
 #	if rewind_state["position"].empty():
 #		queue_free()
 		
+func _ready():
+	$LaunchSound.play()
 func _physics_process(delta):
 		var space_state = get_world_2d().direct_space_state
 		var result = space_state.intersect_ray(global_position, global_position + velocity * delta * 5.0, [self])
