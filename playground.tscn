@@ -1,4 +1,4 @@
-[gd_scene load_steps=172 format=2]
+[gd_scene load_steps=174 format=2]
 
 [ext_resource path="res://shitballs.tres" type="TileSet" id=1]
 [ext_resource path="res://scripts/player.gd" type="Script" id=2]
@@ -43,6 +43,7 @@
 [ext_resource path="res://sounds/pickup_key.wav" type="AudioStream" id=41]
 [ext_resource path="res://sounds/death.wav" type="AudioStream" id=42]
 [ext_resource path="res://sounds/rewind.wav" type="AudioStream" id=43]
+[ext_resource path="res://sounds/teleport.wav" type="AudioStream" id=44]
 
 [sub_resource type="RectangleShape2D" id=181]
 extents = Vector2( 5, 17 )
@@ -379,6 +380,22 @@ tracks/0/keys = {
 
 [sub_resource type="RectangleShape2D" id=231]
 extents = Vector2( 6.5, 12 )
+
+[sub_resource type="Animation" id=236]
+resource_name = "teleport"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [sub_resource type="AtlasTexture" id=64]
 atlas = ExtResource( 3 )
@@ -756,7 +773,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="BootsPickup2"]
 frames = SubResource( 152 )
-frame = 2
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BootsPickup2"]
@@ -773,7 +790,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key1"]
 frames = SubResource( 202 )
-frame = 19
+frame = 18
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key1"]
@@ -789,7 +806,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key2"]
 frames = SubResource( 202 )
-frame = 18
+frame = 17
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key2"]
@@ -807,7 +824,7 @@ description = "An effortless burst of speed.\\nPress 'shift' to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="DashPickup"]
 frames = SubResource( 173 )
-frame = 5
+frame = 4
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DashPickup"]
@@ -823,7 +840,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="FireballPickup"]
 frames = SubResource( 173 )
-frame = 4
+frame = 3
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FireballPickup"]
@@ -840,7 +857,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="LavaPickup"]
 frames = SubResource( 173 )
-frame = 4
+frame = 3
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LavaPickup"]
@@ -890,9 +907,9 @@ text = "oww"
 autowrap = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Boss"]
-position = Vector2( 0, -7.09476 )
+position = Vector2( 0, -7.30485 )
 frames = SubResource( 229 )
-frame = 3
+frame = 1
 playing = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Boss"]
@@ -905,14 +922,17 @@ anims/hover = SubResource( 230 )
 position = Vector2( 1, -8.93796 )
 shape = SubResource( 231 )
 
+[node name="TeleportSound" type="AudioStreamPlayer2D" parent="Boss"]
+stream = ExtResource( 44 )
+volume_db = -16.714
+
+[node name="InvisPlayer" type="AnimationPlayer" parent="Boss"]
+anims/teleport = SubResource( 236 )
+
 [node name="Player" type="KinematicBody2D" parent="."]
-collision_layer = 8687743
+collision_layer = 8818815
 collision_mask = 32847
 script = ExtResource( 2 )
-has_boots = true
-has_dash = true
-has_fireball = true
-has_lava_imm = true
 respawn_from_boss = Vector2( -6, 400 )
 
 [node name="Sprite" type="AnimatedSprite" parent="Player"]

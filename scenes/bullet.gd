@@ -62,24 +62,33 @@ func _physics_process(delta):
 				result.collider.teleport()
 		move(delta)
 
-func move(delta):
-	var coll = move_and_collide(velocity * delta)
-	if coll != null:
-#		done_exploding = true
+func explode():
+	if !spent:
 		$Particles/A.emitting = false
 		$Particles/B.emitting = false
-		if !spent:
-			spent = true
-			var expl = explosion.instance()
-			expl.collision_layer = collision_layer & 0b111111111111111111111110
-			expl.collision_mask = collision_mask & 0b111111111111111111111110
-			expl.global_position = global_position
-			expl.get_node("CPUParticles2D").emitting = true
-			Events.emit_signal("shake")
-			get_parent().add_child(expl)
-			velocity = Vector2.ZERO;
-			yield(get_tree().create_timer(1.0), "timeout")
-			queue_free()
+		spent = true
+		var expl = explosion.instance()
+		expl.collision_layer = collision_layer & 0b111111111111111111111110
+		expl.collision_mask = collision_mask & 0b111111111111111111111110
+		set_deferred("collision_layer", 0)
+		set_deferred("collision_mask", 0)
+		$CollisionShape2D.set_deferred("disabled", true)
+		expl.global_position = global_position
+		expl.get_node("CPUParticles2D").emitting = true
+		Events.emit_signal("shake")
+		get_parent().add_child(expl)
+		velocity = Vector2.ZERO;
+		yield(get_tree().create_timer(1.0), "timeout")
+		queue_free()
+		
+func move(delta):
+	var coll = move_and_collide(velocity * delta)
+	if coll != null && !spent:
+#		done_exploding = true
+		explode()
+		if coll.collider.has_method("explode"):
+			coll.collider.explode()
+		
 		
 #	rewind_state["position"].append(position)
 #	rewind_state["done_exploding"].append(done_exploding)

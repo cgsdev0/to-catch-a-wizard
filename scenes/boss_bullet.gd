@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 export var velocity = Vector2(0, 0)
+export var tracking_rate = 2
 
 var explosion = preload("res://scenes/boss_explosion.tscn")
 
@@ -50,28 +51,55 @@ var explosion = preload("res://scenes/boss_explosion.tscn")
 #	if rewind_state["position"].empty():
 #		queue_free()
 var player
+
+func _ready():
+	Events.connect("remove_boss_bullets", self, "on_boss_cleanup")
+
+func on_boss_cleanup():
+	queue_free()
 	
 func _physics_process(delta):
 	move(delta)
 
+var spent = false
+
+func explode():
+	if spent:
+		return
+	spent = true
+#		done_exploding = true
+	set_deferred("collision_layer", 0)
+	set_deferred("collision_mask", 0)
+	$Particles/A.emitting = false
+	$Particles/B.emitting = false
+	var expl = explosion.instance()
+	$CollisionShape2D.set_deferred("disabled", true)
+	expl.global_position = global_position
+	expl.get_node("CPUParticles2D").emitting = true
+	Events.emit_signal("shake")
+	get_parent().add_child(expl)
+	velocity = Vector2.ZERO
+	Events.emit_signal("boss_bullet_down")
+	yield(get_tree().create_timer(1.0), "timeout")
+	queue_free()
+		
 func move(delta):
-	var norm = (player.global_position - global_position).normalized()
+	var desired = (player.global_position - global_position).normalized()
+	var norm
+	if tracking_rate == -1:
+		norm = desired
+	else:
+		if velocity.normalized().angle_to(desired) > 0:
+			norm = velocity.rotated(delta * tracking_rate).normalized()
+		else:
+			norm = velocity.rotated(-delta * tracking_rate).normalized()
 	velocity = norm * velocity.length()
 	
 	var coll = move_and_collide(velocity * delta)
-	if coll != null:
-#		done_exploding = true
-		$Particles/A.emitting = false
-		$Particles/B.emitting = false
-		var expl = explosion.instance()
-		$CollisionShape2D.disabled = true
-		expl.global_position = global_position
-		expl.get_node("CPUParticles2D").emitting = true
-		Events.emit_signal("shake")
-		get_parent().add_child(expl)
-		velocity = Vector2.ZERO
-		yield(get_tree().create_timer(1.0), "timeout")
-		queue_free()
+	if coll != null && !spent:
+		explode()
+		if coll.collider.has_method("explode"):
+			coll.collider.explode()
 		
 #	rewind_state["position"].append(position)
 #	rewind_state["done_exploding"].append(done_exploding)

@@ -69,11 +69,13 @@ var rewind_delta = 0
 var init_global
 
 var dead = false
+var respawning = false
 
 func kill_player():
 	if dead:
 		return
 	dead = true
+	Events.emit_signal("remove_boss_bullets")
 	$DeathSound.play()
 	$Position2D/Camera2D/CanvasLayer/DeathFade.modulate = Color.transparent
 	$Position2D/Camera2D/CanvasLayer/DeathFade.visible = true
@@ -81,7 +83,10 @@ func kill_player():
 	yield(get_tree().create_timer(0.5), "timeout")
 	boss.reset_boss()
 	position = respawn_from_boss
+	respawning = true
+	Events.emit_signal("remove_boss_bullets")
 	yield(get_tree().create_timer(0.5), "timeout")
+	Events.emit_signal("remove_boss_bullets")
 	$Position2D/Camera2D/CanvasLayer/DeathFade.visible = false
 	dead = false
 

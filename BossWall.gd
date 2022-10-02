@@ -12,4 +12,5 @@ func _ready():
 
 func on_body_enter(body):
 	body.bossFight = true
+	body.respawning = false
 

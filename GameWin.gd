@@ -18,8 +18,12 @@ func floaty_modulus(a, b):
 	while a > b:
 		a -= b
 	return a
-		
+
+var you_won = false
 func on_win():
+	if you_won:
+		return
+	you_won = true
 	speedrun_time = player.speedrun_timer
 	var minutes = floor(speedrun_time / 60.0)
 	var seconds = floor(floaty_modulus(speedrun_time, 60.0) * 1000) / 1000.0

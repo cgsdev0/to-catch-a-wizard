@@ -23,53 +23,114 @@ var lines = [
 ]
 onready var rand = RandomNumberGenerator.new()
 
-func fire():
+var cooldown_p1 = 2.8
+var cooldown_timer1 = 0
+
+func fire(rage = false):
+	if cooldown_timer1 < cooldown_p1 && !rage:
+		return
+	cooldown_timer1 = 0.0;
+	if rage:
+		yield(get_tree().create_timer(0.2), "timeout")
 	var bullet = bullet_scene.instance()
 	bullet.global_position = global_position
 	bullet.velocity = 60 * Vector2.UP
 	bullet.player = player
 	get_parent().add_child(bullet)
 	
+var teleporting = false
 func teleport():
+	if teleporting:
+		return
 	if phase > 1:
 		return
-	fire()
+	teleporting = true
+	fire(true) #angry
+	$InvisPlayer.play("teleport")
+	yield(get_tree().create_timer(0.15), "timeout")
 	var temp = position.x
 	position.x = x2
 	$AnimatedSprite.scale.x *= -1
+	$TeleportSound.play()
 	x2 = temp
+	yield(get_tree().create_timer(0.15), "timeout")
+	teleporting = false
 
-var dmg_cooldown = 0.5
+var dmg_cooldown = 1.5
 var dmg_timer = 0.0
 var brick_health = 6
 var phase = 1
 
-var phase2health = 3
+var phase2health = 10
+
 func phase2():
 	if phase == 1:
+		
 		phase = 2
+		cooldown_timer = 0.0
 		$Ow.text = "enough of that!"
 		$Ow.visible = true
 		$Label.visible = false
+		$TeleportSound.play()
+		$InvisPlayer.play("teleport")
+		yield(get_tree().create_timer(0.15), "timeout")
 	else:
 		return
+	
 	position.x = floor((position.x + x2) / 2.0)
 	position.y -= 50
 	
 func _physics_process(delta):
+	if !player.bossFight || player.respawning:
+		return
 	dmg_timer += delta
+	cooldown_timer += delta
+	cooldown_timer1 += delta
+	if phase == 1:
+		fire()
+	if phase == 2:
+		phase2attack()
+
+
+var cooldown_p2 = 4.5
+var cooldown_timer = cooldown_p2
+
+func phase2attack(rage = false):
+	if cooldown_timer < cooldown_p2 && !rage:
+		return
+	if rage:
+		yield(get_tree().create_timer(0.45), "timeout")
+	cooldown_timer = 0.0
+	var bullet = bullet_scene.instance()
+	bullet.global_position = global_position
+	bullet.velocity = 60 * Vector2.LEFT
+	bullet.tracking_rate = rand.randf_range(0.5, 1.8)
+	bullet.player = player
+	get_parent().add_child(bullet)
+	bullet = bullet_scene.instance()
+	bullet.global_position = global_position
+	bullet.velocity = 75 * Vector2.DOWN
+	bullet.tracking_rate = -1
+	bullet.player = player
+	get_parent().add_child(bullet)
+	bullet = bullet_scene.instance()
+	bullet.global_position = global_position
+	bullet.velocity = 60 * Vector2.RIGHT
+	bullet.tracking_rate = rand.randf_range(0.5, 1.8)
+	bullet.player = player
+	get_parent().add_child(bullet)
 	
-func phase2damage():
-	print("hi")
-	if dmg_timer < dmg_cooldown || phase < 2:
+func phase2damage(attacker):
+	print(attacker)
+	if dmg_timer < dmg_cooldown || phase < 2 || phase2health == 0:
 		return
 	dmg_timer = 0.0
-	print("why")
 	phase2health -= 1
-	print(phase2health)
+	phase2attack()
 	if phase2health <= 0:
 		phase = 3
 		visible = false
+		Events.emit_signal("remove_boss_bullets")
 		for i in 8:
 			var expl = explosion_scene.instance()
 			expl.global_position = global_position + Vector2(rand.randf_range(-10, 10), rand.randf_range(-10, 10))
@@ -110,7 +171,11 @@ func reset_boss():
 	brick_health = 6
 	global_position = init_global
 	x2 = init_x2
-	phase2health = 3
+	phase2health = 10
+	cooldown_timer1 = 0.0
+	$Ow.text = "oww"
+	$Ow.visible = false
+	$Label.visible = true
 	
 var init_global
 var init_x2
