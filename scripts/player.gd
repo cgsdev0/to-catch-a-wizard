@@ -3,7 +3,11 @@ extends KinematicBody2D
 
 export var has_boots = false
 export var has_dash = false
+export var has_fireball = false
 export var has_lava_imm = false
+
+var bossFight = false
+var wasBossFight = false
 
 export var keys = 0
 
@@ -19,11 +23,12 @@ export var roll_speed = 300
 export var dive_horizontal_speed = 280
 export var dive_vertical_speed = 300
 export var roll_duration = 0.7
-export var shoot_duration = 0.3
+export var shoot_duration = 0.9
 export var bad_roll_modifier = 0.7
 export var arm_speed = 10
 export var gravity = 4
 export var boots_gravity = 8
+export var max_y_speed = 220
 export var prone_slide_decel = 10
 export var jump_cooldown = 0.1
 export var dash_cooldown = 0.2
@@ -33,6 +38,7 @@ enum MovementState {NORMAL, JUMPING_1, JUMPING_2, DASH}
 var movement_state = MovementState.NORMAL
 var last_moved_direction = 1
 var timer = 0
+var shoot_timer = shoot_duration
 var jump_cooldown_timer = jump_cooldown
 var dash_cooldown_timer = dash_cooldown
 var dash_timer = 0.0
@@ -58,6 +64,8 @@ var velocity = Vector2()
 var rewind_speed = 1
 var rewind_delta = 0
 
+var init_global
+
 func record():
 	if recording == null:
 		recording = 0.0
@@ -73,7 +81,7 @@ func rewind():
 func compute_rewind(delta):
 	
 	rewind_delta += delta
-	var rewind_speed = rewind_delta * 3.0
+	var rewind_speed = rewind_delta * 3.2
 	var pos = rewind_state["position"].pop_back()
 	var rot = rewind_state["rotation"].pop_back()
 	var facing = rewind_state["facing"].pop_back()
@@ -88,11 +96,6 @@ func compute_rewind(delta):
 			rot = rewind_state["rotation"].pop_back()
 			facing = rewind_state["facing"].pop_back()
 			playing = rewind_state["playing"].pop_back()
-			if !rewind_state["position"].empty() && rewind_speed > 3:
-				pos = rewind_state["position"].pop_back()
-				rot = rewind_state["rotation"].pop_back()
-				facing = rewind_state["facing"].pop_back()
-				playing = rewind_state["playing"].pop_back()
 	was_rewinding = true
 	
 	rotation = rot
@@ -101,6 +104,7 @@ func compute_rewind(delta):
 	$Sprite.scale.x = facing
 	
 	if rewind_state["position"].empty():
+		global_position = init_global
 		$CollisionShape2D.set_deferred("disabled", false)
 		rewinding = false
 		print(rewind_delta)
@@ -113,14 +117,28 @@ func colorize(color: Color = Color(1, 1, 1, 1)):
 
 func _physics_process(delta: float):
 	if has_lava_imm:
-		self.collision_layer = self.collision_layer & 0b01111111111111011111;
-		self.collision_mask = self.collision_mask & 0b01111111111111011111;
+		self.collision_layer = self.collision_layer & 0b011111111111111111011111;
+		self.collision_mask = self.collision_mask & 0b011111111111111111011111;
 		
 	velocity = move_and_slide(velocity, normal)
 	if rewinding:
 		compute_rewind(delta)
 		return
 	
+	if bossFight && !wasBossFight:
+		wasBossFight = true
+		rewinding = false
+		# dump our rewind state
+		rewind_duration = 5.0
+		rewind_state = {
+			"position": [],
+			"rotation": [],
+			"facing": [],
+			"playing": []
+		}
+	if Input.is_action_just_pressed("rewind") && recording && !bossFight:
+		rewind()
+		
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
 		if collision.collider == null:
@@ -134,19 +152,39 @@ func _physics_process(delta: float):
 	if recording != null:
 		recording += delta
 		if recording >= rewind_duration:
-			rewind()
-			return
+			# Revert to circbuf if we're in the bossfight
+			if !bossFight:
+				rewind()
+				return
+			else:
+				rewind_state["position"].pop_front()
+				rewind_state["rotation"].pop_front()
+				rewind_state["facing"].pop_front()
+				rewind_state["playing"].pop_front()
 		
 		rewind_state["position"].append(global_position)
 		rewind_state["rotation"].append(rotation)
-		
+	
+	if Input.is_action_just_pressed("fireball") && has_fireball && velocity != Vector2.ZERO:
+		if shoot_timer < shoot_duration:
+			return
+		record()
+		shoot_timer = 0.0
+		var bullet = bullet_scene.instance()
+		bullet.velocity = velocity.normalized() * 300.0
+		bullet.global_position = global_position + velocity.normalized() * 20.0
+		get_parent().add_child(bullet)
 	if movement_state != MovementState.DASH:
 		if has_boots:
 			velocity.y += boots_gravity * delta * 60
 		else:
 			velocity.y += gravity * delta * 60
+			
+	if velocity.y > max_y_speed:
+		velocity.y = max_y_speed
 
 	timer += delta
+	shoot_timer += delta
 	jump_cooldown_timer += delta
 
 	var prev_movement_state = movement_state
@@ -169,7 +207,8 @@ func _physics_process(delta: float):
 	#	record()
 	#	velocity.y = -double_jump_speed
 	#	movement_state = MovementState.JUMPING_2
-		
+	
+
 	if Input.is_action_pressed("ui_up") and movement_state == MovementState.NORMAL:
 		record()
 		if jump_cooldown_timer >= jump_cooldown:
@@ -244,6 +283,8 @@ func _physics_process(delta: float):
 	#if position.x < max_x - get_viewport_rect().size.x / 2:
 	#    position.x = max_x - get_viewport_rect().size.x / 2
 
+func _ready():
+	init_global = global_position
 # would be great to do this less poorly
 func normalizeAngle(angle: float):
 	while angle < 0:

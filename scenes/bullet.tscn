@@ -1,10 +1,85 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://scenes/bullet.gd" type="Script" id=2]
+[ext_resource path="res://fire_particle.png" type="Texture" id=3]
 
-[node name="Sprite" type="Sprite"]
+[sub_resource type="CircleShape2D" id=1]
+radius = 20.0
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+uniform vec4 color_1 = vec4(.0, .0, .0, 1.0);
+uniform vec4 color_2 = vec4(0.5, 0.5, 0.5, 1.0);
+void fragment() {
+	vec4 col = vec4(0.9, 0.4, 0.0, 1.0);
+	float a = texture(TEXTURE, UV).a;
+	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0) + col;
+	COLOR.a = round(a * 3.0) / 6.0;
+	
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
+shader_param/color_1 = Plane( 0, 0, 0, 1 )
+shader_param/color_2 = Plane( 0.5, 0.5, 0.5, 1 )
+
+[sub_resource type="Curve" id=6]
+_data = [ Vector2( 0, 0.871591 ), 0.0, 0.0, 0, 0, Vector2( 0.459459, 0.571591 ), 0.0, 0.0, 0, 0, Vector2( 0.867868, 0.171591 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Shader" id=4]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec4 col = vec4(1.5, 1.1, 0.0, 1.0) * 2.0;
+	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0) + col;
+	COLOR.a = texture(TEXTURE, UV).a / 2.0; //read from texture
+}"
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 4 )
+
+[sub_resource type="Curve" id=7]
+_data = [ Vector2( 0.0600601, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.924925, 0.436364 ), -0.981818, 0.0, 0, 0 ]
+
+[node name="Sprite" type="KinematicBody2D"]
 scale = Vector2( 0.201, 0.201 )
 z_index = 10
-texture = ExtResource( 1 )
 script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Particles" type="Node2D" parent="."]
+
+[node name="A" type="CPUParticles2D" parent="Particles"]
+material = SubResource( 3 )
+z_index = 100
+z_as_relative = false
+amount = 30
+lifetime = 0.3
+local_coords = false
+texture = ExtResource( 3 )
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 61.72
+initial_velocity_random = 1.0
+scale_amount = 1.5
+scale_amount_random = 0.59
+scale_amount_curve = SubResource( 6 )
+
+[node name="B" type="CPUParticles2D" parent="Particles"]
+material = SubResource( 5 )
+z_index = 100
+z_as_relative = false
+amount = 30
+lifetime = 0.3
+local_coords = false
+texture = ExtResource( 3 )
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 61.72
+initial_velocity_random = 1.0
+scale_amount = 0.5
+scale_amount_random = 0.59
+scale_amount_curve = SubResource( 7 )

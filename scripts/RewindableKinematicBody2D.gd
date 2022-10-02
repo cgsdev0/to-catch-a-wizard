@@ -38,7 +38,7 @@ func on_rewind():
 	
 func compute_rewind(delta):
 	rewind_delta += delta
-	var rewind_speed = rewind_delta * 3.0
+	var rewind_speed = rewind_delta * 3.2
 	if rewind_state["position"].empty():
 		self.angular_velocity = 0.0
 		self.gravity_scale = 0.0
@@ -56,9 +56,6 @@ func compute_rewind(delta):
 		if !rewind_state["position"].empty() && rewind_speed > 2:
 			pos = rewind_state["position"].pop_back()
 			rot = rewind_state["rotation"].pop_back()
-			if !rewind_state["position"].empty() && rewind_speed > 3:
-				pos = rewind_state["position"].pop_back()
-				rot = rewind_state["rotation"].pop_back()
 	rotation = rot
 	global_position = pos
 	

@@ -1,0 +1,12 @@
+[gd_resource type="Theme" load_steps=2 format=2]
+
+[ext_resource path="res://fonts/equipment-pro-v1.1/equipment_pro.tres" type="DynamicFont" id=1]
+
+[resource]
+Label/colors/font_color = Color( 1, 1, 1, 1 )
+Label/colors/font_color_shadow = Color( 0, 0, 0, 1 )
+Label/colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+Label/constants/shadow_as_outline = 0
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 1
+Label/fonts/font = ExtResource( 1 )
