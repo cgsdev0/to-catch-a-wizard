@@ -1,10 +1,15 @@
 extends StaticBody2D
 
 
+var eaten_key = false
 
 func open():
+	if eaten_key:
+		return false
+	eaten_key = true
 	$CollisionPolygon2D.disabled = true
 	$Door.texture = preload("res://door_open.png")
+	return true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

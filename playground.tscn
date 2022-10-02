@@ -726,7 +726,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="BootsPickup2"]
 frames = SubResource( 152 )
-frame = 4
+frame = 12
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BootsPickup2"]
@@ -743,7 +743,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key1"]
 frames = SubResource( 202 )
-frame = 1
+frame = 9
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key1"]
@@ -759,6 +759,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key2"]
 frames = SubResource( 202 )
+frame = 8
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key2"]
@@ -776,7 +777,7 @@ description = "An effortless burst of speed.\\nPress 'shift' to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="DashPickup"]
 frames = SubResource( 173 )
-frame = 7
+frame = 15
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DashPickup"]
@@ -792,7 +793,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="FireballPickup"]
 frames = SubResource( 173 )
-frame = 6
+frame = 14
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FireballPickup"]
@@ -809,7 +810,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="LavaPickup"]
 frames = SubResource( 173 )
-frame = 6
+frame = 14
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LavaPickup"]
@@ -832,10 +833,6 @@ align = 1
 collision_layer = 8421503
 collision_mask = 32847
 script = ExtResource( 2 )
-has_boots = true
-has_dash = true
-has_fireball = true
-keys = 2
 
 [node name="Sprite" type="AnimatedSprite" parent="Player"]
 frames = SubResource( 72 )

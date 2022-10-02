@@ -68,6 +68,7 @@ func move(delta):
 		Events.emit_signal("shake")
 		get_parent().add_child(expl)
 		velocity = Vector2.ZERO;
+		yield(get_tree().create_timer(1.0), "timeout")
 		queue_free()
 		
 #	rewind_state["position"].append(position)

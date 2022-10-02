@@ -146,8 +146,8 @@ func _physics_process(delta: float):
 		if !(collision.collider.has_meta("door")):
 			continue
 		if keys >= 1:
-			collision.collider.open()
-			keys -= 1
+			if collision.collider.open():
+				keys -= 1
 		
 	if recording != null:
 		recording += delta
