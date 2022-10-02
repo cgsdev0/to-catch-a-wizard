@@ -16,7 +16,6 @@ func on_show_dialog(title, subtitle, description):
 	$Dialog/Background/MarginContainer/VBoxContainer/Title.text = title
 	$Dialog/Background/MarginContainer/VBoxContainer/Subtext.text = subtitle
 	$Dialog/Background/MarginContainer/VBoxContainer/Description.text = description.c_unescape()
-	print(description)
 	self.modulate = Color(1, 1, 1, 0)
 	$AnimationPlayer.play("Fade")
 	self.visible = true

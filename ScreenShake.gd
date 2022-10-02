@@ -18,7 +18,6 @@ func on_shake():
 func _process(delta):
 	shake_strength = lerp(shake_strength, 0, SHAKE_DECAY_RATE * delta)
 	self.offset = get_random_offset()
-	print(self.offset)
 	
 func get_random_offset():
 	return Vector2(

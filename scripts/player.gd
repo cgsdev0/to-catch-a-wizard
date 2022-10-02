@@ -165,14 +165,15 @@ func _physics_process(delta: float):
 		rewind_state["position"].append(global_position)
 		rewind_state["rotation"].append(rotation)
 	
-	if Input.is_action_just_pressed("fireball") && has_fireball && velocity != Vector2.ZERO:
+	if Input.is_action_just_pressed("fireball") && has_fireball:
 		if shoot_timer < shoot_duration:
 			return
 		record()
 		shoot_timer = 0.0
 		var bullet = bullet_scene.instance()
-		bullet.velocity = velocity.normalized() * 300.0
-		bullet.global_position = global_position + velocity.normalized() * 20.0
+		var norm = (get_global_mouse_position() - position).normalized()
+		bullet.velocity =  norm * 300.0
+		bullet.global_position = global_position + norm * 20.0
 		get_parent().add_child(bullet)
 	if movement_state != MovementState.DASH:
 		if has_boots:
