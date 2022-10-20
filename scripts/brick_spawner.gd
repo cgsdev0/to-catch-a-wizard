@@ -11,6 +11,7 @@ func spawn_bricks():
 		var brick = brick_scene.instance()
 		brick.global_position = global_position
 		brick.global_position.y += 14
+		brick.global_position.x += rand.randi_range(-8, 8)
 		get_parent().add_child(brick)
 	pass
 # Called when the node enters the scene tree for the first time.

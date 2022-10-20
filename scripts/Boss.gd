@@ -50,18 +50,30 @@ func teleport():
 	yield(get_tree().create_timer(0.15), "timeout")
 	var temp = position.x
 	position.x = x2
-	$AnimatedSprite.scale.x *= -1
+	$AnimatedSprite.flip_h = !$AnimatedSprite.flip_h
 	$TeleportSound.play()
 	x2 = temp
 	yield(get_tree().create_timer(0.15), "timeout")
 	teleporting = false
 
-var dmg_cooldown = 1.5
-var dmg_timer = 0.0
-var brick_health = 6
-var phase = 1
+var dmg_cooldown = 0.5
 
-var phase2health = 10
+var dmg_timer = 0.0
+var brick_health = 0
+var phase = 0
+var phase2health = 0
+
+func reset_boss():
+	phase = 1
+	brick_health = 6
+	global_position = init_global
+	x2 = init_x2
+	phase2health = 10
+	cooldown_timer1 = 0.0
+	$Ow.text = "oww"
+	$Ow.visible = false
+	$Label.visible = true
+	$AnimatedSprite.flip_h = false
 
 func phase2():
 	if phase == 1:
@@ -146,9 +158,13 @@ func take_damage():
 		return
 	dmg_timer = 0.0
 	brick_health -= 1
+	$HurtAnimation.play("hurt")
+	$BrickHitSound.play()
+	yield(get_tree().create_timer(0.4), "timeout")
 	if brick_health <= 0:
 		phase2()
 		return
+
 	teleport()
 	$Ow.visible = true
 	$Label.visible = false
@@ -166,16 +182,7 @@ func talk():
 	yield(get_tree().create_timer(1.5), "timeout")
 	talk()
 
-func reset_boss():
-	phase = 1
-	brick_health = 6
-	global_position = init_global
-	x2 = init_x2
-	phase2health = 10
-	cooldown_timer1 = 0.0
-	$Ow.text = "oww"
-	$Ow.visible = false
-	$Label.visible = true
+
 	
 var init_global
 var init_x2
@@ -186,7 +193,7 @@ func _ready():
 	rand.randomize()
 	talk()
 	player = get_tree().get_root().find_node("Player", true, false)
-	print(player)
+	reset_boss()
 	pass # Replace with function body.
 
 

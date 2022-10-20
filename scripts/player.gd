@@ -1,10 +1,10 @@
 extends KinematicBody2D
 
 
-export var has_boots = false
-export var has_dash = false
-export var has_fireball = false
-export var has_lava_imm = false
+export var has_boots = true
+export var has_dash = true
+export var has_fireball = true
+export var has_lava_imm = true
 
 export var respawn_from_boss = Vector2()
 
