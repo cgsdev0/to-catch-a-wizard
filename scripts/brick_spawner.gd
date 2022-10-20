@@ -7,7 +7,7 @@ onready var rand = RandomNumberGenerator.new()
 # var b = "text"
 var brick_scene = preload("res://scenes/brick.tscn")
 func spawn_bricks():
-	for i in rand.randi_range(0, 3):
+	for i in rand.randi_range(1, 3):
 		var brick = brick_scene.instance()
 		brick.global_position = global_position
 		brick.global_position.y += 14
