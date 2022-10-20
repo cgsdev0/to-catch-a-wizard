@@ -1,8 +1,8 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://scenes/boss_bullet.gd" type="Script" id=1]
+[ext_resource path="res://scripts/boss_bullet.gd" type="Script" id=1]
 [ext_resource path="res://sounds/bossball_throw.wav" type="AudioStream" id=2]
-[ext_resource path="res://fire_particle.png" type="Texture" id=3]
+[ext_resource path="res://sprites/particles/fire_particle.png" type="Texture" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 20.0

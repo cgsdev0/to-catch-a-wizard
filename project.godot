@@ -8,63 +8,10 @@
 
 config_version=4
 
-_global_script_classes=[ {
-"base": "CollisionPolygon2D",
-"class": "VectorCollisionPolygon",
-"language": "GDScript",
-"path": "res://VectorCollisionPolygon.gd"
-}, {
-"base": "Node2D",
-"class": "VectorControl",
-"language": "GDScript",
-"path": "res://VectorControl.gd"
-}, {
-"base": "Polygon2D",
-"class": "VectorFill",
-"language": "GDScript",
-"path": "res://VectorFill.gd"
-}, {
-"base": "VectorControl",
-"class": "VectorHandle",
-"language": "GDScript",
-"path": "res://VectorHandle.gd"
-}, {
-"base": "Node2D",
-"class": "VectorPath",
-"language": "GDScript",
-"path": "res://VectorPath.gd"
-}, {
-"base": "VectorControl",
-"class": "VectorPoint",
-"language": "GDScript",
-"path": "res://VectorPoint.gd"
-}, {
-"base": "Node2D",
-"class": "VectorPointGroup",
-"language": "GDScript",
-"path": "res://VectorPointGroup.gd"
-}, {
-"base": "Line2D",
-"class": "VectorStroke",
-"language": "GDScript",
-"path": "res://VectorStroke.gd"
-} ]
-_global_script_class_icons={
-"VectorCollisionPolygon": "",
-"VectorControl": "",
-"VectorFill": "",
-"VectorHandle": "",
-"VectorPath": "",
-"VectorPoint": "",
-"VectorPointGroup": "",
-"VectorStroke": ""
-}
-
 [application]
 
 config/name="LD51"
-run/main_scene="res://playground.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://main.tscn"
 
 [autoload]
 
