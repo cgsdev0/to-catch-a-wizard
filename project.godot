@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node",
+"class": "RewindableKinematicBody2D",
+"language": "GDScript",
+"path": "res://scripts/pixel_scale.gd"
+} ]
+_global_script_class_icons={
+"RewindableKinematicBody2D": ""
+}
+
 [application]
 
 config/name="LD51"
@@ -16,7 +26,7 @@ run/main_scene="res://main.tscn"
 [autoload]
 
 PixelScale="*res://scripts/pixel_scale.gd"
-Events="*res://scripts/Events.gd"
+Events="*res://scripts/events.gd"
 
 [display]
 

@@ -1,3 +1,4 @@
+class_name RewindableKinematicBody2D
 extends Node
 
 # don't forget to use stretch mode 'viewport' and aspect 'ignore'

@@ -4,8 +4,8 @@
 [ext_resource path="res://fonts/equipment-pro-v1.1/equipment_pro.tres" type="DynamicFont" id=2]
 [ext_resource path="res://sprites/tiles/tileset.tres" type="TileSet" id=3]
 [ext_resource path="res://scripts/player.gd" type="Script" id=4]
-[ext_resource path="res://scripts/RewindableKinematicBody2D.gd" type="Script" id=5]
-[ext_resource path="res://scripts/Boss.gd" type="Script" id=6]
+[ext_resource path="res://scripts/rewindable_kinematic_body_2d.gd" type="Script" id=5]
+[ext_resource path="res://scripts/boss.gd" type="Script" id=6]
 [ext_resource path="res://sprites/pickups/boots.png" type="Texture" id=7]
 [ext_resource path="res://sprites/enemies/idle_boss.png" type="Texture" id=8]
 [ext_resource path="res://sprites/pickups/key.png" type="Texture" id=9]
@@ -20,19 +20,19 @@
 [ext_resource path="res://sounds/death.wav" type="AudioStream" id=18]
 [ext_resource path="res://sounds/door_open.wav" type="AudioStream" id=19]
 [ext_resource path="res://sounds/pickup_key.wav" type="AudioStream" id=20]
-[ext_resource path="res://scripts/Pickup.gd" type="Script" id=21]
-[ext_resource path="res://scripts/Lava.gd" type="Script" id=22]
-[ext_resource path="res://scripts/TorchDoor.gd" type="Script" id=23]
-[ext_resource path="res://scripts/Torch.gd" type="Script" id=24]
-[ext_resource path="res://scripts/BrickSpawner.gd" type="Script" id=25]
-[ext_resource path="res://scripts/GUI.gd" type="Script" id=26]
-[ext_resource path="res://scripts/ScreenShake.gd" type="Script" id=27]
+[ext_resource path="res://scripts/pickup.gd" type="Script" id=21]
+[ext_resource path="res://scripts/lava.gd" type="Script" id=22]
+[ext_resource path="res://scripts/torch_door.gd" type="Script" id=23]
+[ext_resource path="res://scripts/torch.gd" type="Script" id=24]
+[ext_resource path="res://scripts/brick_spawner.gd" type="Script" id=25]
+[ext_resource path="res://scripts/gui.gd" type="Script" id=26]
+[ext_resource path="res://scripts/screen_shake.gd" type="Script" id=27]
 [ext_resource path="res://scripts/grid_snapper.gd" type="Script" id=28]
-[ext_resource path="res://scripts/BossWall.gd" type="Script" id=29]
-[ext_resource path="res://scripts/Door.gd" type="Script" id=30]
-[ext_resource path="res://scripts/DropFloor.gd" type="Script" id=31]
-[ext_resource path="res://scripts/Dialog.gd" type="Script" id=32]
-[ext_resource path="res://scripts/GameWin.gd" type="Script" id=33]
+[ext_resource path="res://scripts/boss_wall.gd" type="Script" id=29]
+[ext_resource path="res://scripts/door.gd" type="Script" id=30]
+[ext_resource path="res://scripts/drop_floor.gd" type="Script" id=31]
+[ext_resource path="res://scripts/dialog.gd" type="Script" id=32]
+[ext_resource path="res://scripts/game_win.gd" type="Script" id=33]
 [ext_resource path="res://fonts/ui_theme.tres" type="Theme" id=34]
 [ext_resource path="res://fonts/m3x6.tres" type="DynamicFont" id=35]
 [ext_resource path="res://sprites/tiles/lava_texture.tres" type="Texture" id=36]
@@ -773,7 +773,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="BootsPickup2"]
 frames = SubResource( 152 )
-frame = 2
+frame = 5
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BootsPickup2"]
@@ -790,7 +790,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key1"]
 frames = SubResource( 202 )
-frame = 19
+frame = 2
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key1"]
@@ -806,7 +806,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key2"]
 frames = SubResource( 202 )
-frame = 18
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key2"]
@@ -824,7 +824,7 @@ description = "An effortless burst of speed.\\nPress 'shift', 'x', or 'z' to use
 
 [node name="DashPickup" type="AnimatedSprite" parent="DashPickup"]
 frames = SubResource( 173 )
-frame = 5
+frame = 8
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DashPickup"]
@@ -840,7 +840,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="FireballPickup"]
 frames = SubResource( 173 )
-frame = 4
+frame = 7
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FireballPickup"]
@@ -857,7 +857,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="LavaPickup"]
 frames = SubResource( 173 )
-frame = 4
+frame = 7
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LavaPickup"]
@@ -909,7 +909,7 @@ autowrap = true
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Boss"]
 position = Vector2( 0, -8.75829 )
 frames = SubResource( 229 )
-frame = 4
+frame = 6
 playing = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Boss"]
