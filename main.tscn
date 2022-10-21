@@ -1,4 +1,4 @@
-[gd_scene load_steps=180 format=2]
+[gd_scene load_steps=170 format=2]
 
 [ext_resource path="res://scripts/pixel_scale.gd" type="Script" id=1]
 [ext_resource path="res://fonts/equipment-pro-v1.1/equipment_pro.tres" type="DynamicFont" id=2]
@@ -23,7 +23,7 @@
 [ext_resource path="res://scripts/pickup.gd" type="Script" id=21]
 [ext_resource path="res://scripts/lava.gd" type="Script" id=22]
 [ext_resource path="res://scripts/torch_door.gd" type="Script" id=23]
-[ext_resource path="res://scripts/torch.gd" type="Script" id=24]
+[ext_resource path="res://scenes/torch.tscn" type="PackedScene" id=24]
 [ext_resource path="res://scripts/brick_spawner.gd" type="Script" id=25]
 [ext_resource path="res://scripts/gui.gd" type="Script" id=26]
 [ext_resource path="res://scripts/screen_shake.gd" type="Script" id=27]
@@ -40,12 +40,12 @@
 [ext_resource path="res://sprites/pickups/spellbook.png" type="Texture" id=38]
 [ext_resource path="res://sprites/props/torch_door.png" type="Texture" id=39]
 [ext_resource path="res://sprites/props/fall2.png" type="Texture" id=40]
-[ext_resource path="res://sprites/props/torch_on.png" type="Texture" id=41]
 [ext_resource path="res://sprites/props/door.png" type="Texture" id=42]
-[ext_resource path="res://sprites/props/torch_off1.png" type="Texture" id=43]
 [ext_resource path="res://sprites/player/walking.png" type="Texture" id=44]
 [ext_resource path="res://sounds/boss_hurt_brick2.wav" type="AudioStream" id=45]
 [ext_resource path="res://health_bar.gd" type="Script" id=46]
+[ext_resource path="res://sounds/boss_charge_up.wav" type="AudioStream" id=47]
+[ext_resource path="res://sounds/boss_shoot.wav" type="AudioStream" id=48]
 
 [sub_resource type="RectangleShape2D" id=181]
 extents = Vector2( 5, 17 )
@@ -526,6 +526,18 @@ tracks/3/keys = {
 "update": 0,
 "values": [ 0.0, 0.0, 12.0 ]
 }
+tracks/4/type = "value"
+tracks/4/path = NodePath("../ChargeUpSound:playing")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 1.9 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
 [sub_resource type="Animation" id=237]
 resource_name = "hurt"
@@ -831,54 +843,6 @@ extents = Vector2( 6.5, 58 )
 [sub_resource type="RectangleShape2D" id=204]
 extents = Vector2( 58, 6 )
 
-[sub_resource type="AtlasTexture" id=211]
-atlas = ExtResource( 43 )
-region = Rect2( 0, 0, 16, 24 )
-
-[sub_resource type="AtlasTexture" id=212]
-atlas = ExtResource( 41 )
-region = Rect2( 0, 0, 16, 24 )
-
-[sub_resource type="AtlasTexture" id=213]
-atlas = ExtResource( 41 )
-region = Rect2( 16, 0, 16, 24 )
-
-[sub_resource type="AtlasTexture" id=214]
-atlas = ExtResource( 41 )
-region = Rect2( 32, 0, 16, 24 )
-
-[sub_resource type="AtlasTexture" id=215]
-atlas = ExtResource( 41 )
-region = Rect2( 48, 0, 16, 24 )
-
-[sub_resource type="AtlasTexture" id=216]
-atlas = ExtResource( 41 )
-region = Rect2( 64, 0, 16, 24 )
-
-[sub_resource type="AtlasTexture" id=217]
-atlas = ExtResource( 41 )
-region = Rect2( 80, 0, 16, 24 )
-
-[sub_resource type="AtlasTexture" id=218]
-atlas = ExtResource( 41 )
-region = Rect2( 96, 0, 16, 24 )
-
-[sub_resource type="SpriteFrames" id=219]
-animations = [ {
-"frames": [ SubResource( 211 ) ],
-"loop": true,
-"name": "off",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 212 ), SubResource( 213 ), SubResource( 214 ), SubResource( 215 ), SubResource( 216 ), SubResource( 217 ), SubResource( 218 ) ],
-"loop": true,
-"name": "on",
-"speed": 10.0
-} ]
-
-[sub_resource type="RectangleShape2D" id=220]
-extents = Vector2( 2.5, 7 )
-
 [sub_resource type="RectangleShape2D" id=234]
 
 [sub_resource type="RectangleShape2D" id=174]
@@ -892,6 +856,7 @@ position = Vector2( -22, 30 )
 
 [node name="TileMap" type="TileMap" parent="Node2D"]
 position = Vector2( 8, 8 )
+z_index = -15
 tile_set = ExtResource( 3 )
 cell_size = Vector2( 12, 12 )
 cell_quadrant_size = 12
@@ -921,7 +886,7 @@ position = Vector2( -150, -34 )
 collision_layer = 64
 collision_mask = 64
 script = ExtResource( 23 )
-torches = [ NodePath("../Torch1"), NodePath("../Torch2"), NodePath("../Torch3"), NodePath("../Torch4"), NodePath("../Torch5") ]
+torches = [ NodePath("../Torches/Torch1"), NodePath("../Torches/Torch2"), NodePath("../Torches/Torch3"), NodePath("../Torches/Torch4"), NodePath("../Torches/Torch5") ]
 
 [node name="TorchDoor" type="Sprite" parent="TorchDoor"]
 position = Vector2( -494, 30 )
@@ -961,7 +926,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="BootsPickup2"]
 frames = SubResource( 152 )
-frame = 12
+frame = 19
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BootsPickup2"]
@@ -978,7 +943,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key1"]
 frames = SubResource( 202 )
-frame = 9
+frame = 16
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key1"]
@@ -994,7 +959,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key2"]
 frames = SubResource( 202 )
-frame = 8
+frame = 15
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key2"]
@@ -1012,7 +977,7 @@ description = "An effortless burst of speed.\\nPress 'shift', 'x', or 'z' to use
 
 [node name="DashPickup" type="AnimatedSprite" parent="DashPickup"]
 frames = SubResource( 173 )
-frame = 15
+frame = 2
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DashPickup"]
@@ -1028,7 +993,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="FireballPickup"]
 frames = SubResource( 173 )
-frame = 14
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FireballPickup"]
@@ -1045,7 +1010,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="LavaPickup"]
 frames = SubResource( 173 )
-frame = 14
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LavaPickup"]
@@ -1097,6 +1062,7 @@ autowrap = true
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Boss"]
 position = Vector2( 0, -9.0347 )
 frames = SubResource( 229 )
+frame = 1
 playing = true
 offset = Vector2( 0, -12 )
 
@@ -1110,9 +1076,18 @@ anims/hover = SubResource( 230 )
 position = Vector2( 1, -16.5 )
 shape = SubResource( 231 )
 
+[node name="ChargeUpSound" type="AudioStreamPlayer" parent="Boss"]
+stream = ExtResource( 47 )
+volume_db = -9.0
+
 [node name="TeleportSound" type="AudioStreamPlayer2D" parent="Boss"]
 stream = ExtResource( 17 )
 volume_db = -16.714
+
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="Boss"]
+stream = ExtResource( 48 )
+volume_db = -5.0
+max_distance = 3000.0
 
 [node name="BrickHitSound" type="AudioStreamPlayer2D" parent="Boss"]
 stream = ExtResource( 45 )
@@ -1231,16 +1206,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.431373 )
 
-[node name="PressEnterText" type="Label" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -8.0
-margin_bottom = -8.0
-text = "(press enter)"
-align = 2
-valign = 2
-autowrap = true
-
 [node name="Dialog" type="MarginContainer" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
 anchor_left = 0.15
 anchor_top = 0.15
@@ -1282,6 +1247,16 @@ margin_top = 40.0
 margin_right = 201.0
 margin_bottom = 56.0
 text = "description of what is goin' on."
+autowrap = true
+
+[node name="PressEnterText" type="Label" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -52.0
+margin_bottom = -34.0
+text = "(press E)"
+align = 2
+valign = 2
 autowrap = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Position2D/Camera2D/CanvasLayer/Control"]
@@ -1462,75 +1437,33 @@ position = Vector2( 23, -11 )
 shape = SubResource( 204 )
 one_way_collision = true
 
-[node name="Torch1" type="StaticBody2D" parent="."]
-position = Vector2( -225, -49 )
-collision_layer = 65536
-collision_mask = 65536
-script = ExtResource( 24 )
+[node name="Torch6" parent="." instance=ExtResource( 24 )]
+position = Vector2( -43, -40.0001 )
+lit = true
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Torch1"]
-frames = SubResource( 219 )
-animation = "off"
+[node name="Torches" type="Node2D" parent="."]
+position = Vector2( -143, 379 )
+rotation = -1.5708
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Torch1"]
-position = Vector2( -0.5, 4 )
-shape = SubResource( 220 )
+[node name="Torch1" parent="Torches" instance=ExtResource( 24 )]
+position = Vector2( 428, -81.9984 )
+rotation = 1.5708
 
-[node name="Torch2" type="StaticBody2D" parent="."]
-position = Vector2( -300, -49 )
-collision_layer = 65536
-collision_mask = 65536
-script = ExtResource( 24 )
+[node name="Torch2" parent="Torches" instance=ExtResource( 24 )]
+position = Vector2( 428.001, -156.998 )
+rotation = 1.5708
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Torch2"]
-frames = SubResource( 219 )
-animation = "off"
+[node name="Torch3" parent="Torches" instance=ExtResource( 24 )]
+position = Vector2( 428.001, -231.998 )
+rotation = 1.5708
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Torch2"]
-position = Vector2( -0.5, 4 )
-shape = SubResource( 220 )
+[node name="Torch4" parent="Torches" instance=ExtResource( 24 )]
+position = Vector2( 428.001, -306.998 )
+rotation = 1.5708
 
-[node name="Torch3" type="StaticBody2D" parent="."]
-position = Vector2( -375, -49 )
-collision_layer = 65536
-collision_mask = 65536
-script = ExtResource( 24 )
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Torch3"]
-frames = SubResource( 219 )
-animation = "off"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Torch3"]
-position = Vector2( -0.5, 4 )
-shape = SubResource( 220 )
-
-[node name="Torch4" type="StaticBody2D" parent="."]
-position = Vector2( -450, -49 )
-collision_layer = 65536
-collision_mask = 65536
-script = ExtResource( 24 )
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Torch4"]
-frames = SubResource( 219 )
-animation = "off"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Torch4"]
-position = Vector2( -0.5, 4 )
-shape = SubResource( 220 )
-
-[node name="Torch5" type="StaticBody2D" parent="."]
-position = Vector2( -525, -49 )
-collision_layer = 65536
-collision_mask = 65536
-script = ExtResource( 24 )
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Torch5"]
-frames = SubResource( 219 )
-animation = "off"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Torch5"]
-position = Vector2( -0.5, 4 )
-shape = SubResource( 220 )
+[node name="Torch5" parent="Torches" instance=ExtResource( 24 )]
+position = Vector2( 428.001, -381.998 )
+rotation = 1.5708
 
 [node name="BrickSpawner" type="StaticBody2D" parent="."]
 position = Vector2( -376, 262 )

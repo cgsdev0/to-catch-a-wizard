@@ -96,6 +96,9 @@ func move(delta):
 
 func _on_Area2D_body_entered(body):
 	if !spent:
+		if body.has_method("light"):
+			body.light()
+			return
 		explode()
 		if body.has_method("explode"):
 			body.explode()

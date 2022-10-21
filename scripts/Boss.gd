@@ -32,10 +32,14 @@ func fire(rage = false):
 	cooldown_timer1 = 0.0;
 	if rage:
 		yield(get_tree().create_timer(0.2), "timeout")
+#	$ShootSound.pitch_scale = 0.7
+#	$ShootSound.play()
+#	yield(get_tree().create_timer(0.2), "timeout")
 	var bullet = bullet_scene.instance()
 	bullet.global_position = global_position
 	bullet.velocity = 60 * Vector2.UP
 	bullet.player = player
+	bullet.position.y -= 16
 	get_parent().add_child(bullet)
 	
 var teleporting = false
@@ -118,23 +122,29 @@ func phase2attack(rage = false):
 		return
 	if rage:
 		yield(get_tree().create_timer(0.45), "timeout")
+#	$ShootSound.pitch_scale = 1.2
+#	$ShootSound.play()
+#	yield(get_tree().create_timer(0.2), "timeout")
 	cooldown_timer = 0.0
 	var bullet = bullet_scene.instance()
 	bullet.global_position = global_position
 	bullet.velocity = 60 * Vector2.LEFT
 	bullet.tracking_rate = rand.randf_range(0.5, 1.8)
+	bullet.position.y -= 16
 	bullet.player = player
 	get_parent().add_child(bullet)
 	bullet = bullet_scene.instance()
 	bullet.global_position = global_position
 	bullet.velocity = 75 * Vector2.DOWN
 	bullet.tracking_rate = -1
+	bullet.position.y -= 16
 	bullet.player = player
 	get_parent().add_child(bullet)
 	bullet = bullet_scene.instance()
 	bullet.global_position = global_position
 	bullet.velocity = 60 * Vector2.RIGHT
 	bullet.tracking_rate = rand.randf_range(0.5, 1.8)
+	bullet.position.y -= 16
 	bullet.player = player
 	get_parent().add_child(bullet)
 	

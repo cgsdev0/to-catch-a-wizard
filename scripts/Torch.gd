@@ -4,7 +4,7 @@ extends StaticBody2D
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-var lit = false
+export var lit = false
 
 var rewinding = false
 var recording = false
@@ -16,8 +16,12 @@ var rewind_state = {
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Events.connect("rewind", self, "on_rewind")
-	Events.connect("record", self, "on_record")
+	if lit:
+		$AnimatedSprite.play("on")
+	else:
+		Events.connect("rewind", self, "on_rewind")
+		Events.connect("record", self, "on_record")
+
 	
 func on_record():
 	recording = true
@@ -58,7 +62,6 @@ func compute_rewind(delta):
 func light():
 	lit = true
 	$AnimatedSprite.play("on")
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

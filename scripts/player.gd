@@ -11,7 +11,7 @@ export var respawn_from_boss = Vector2()
 var bossFight = false
 var wasBossFight = false
 
-export var keys = 0
+export var keys = 2
 
 # Tweakable constants
 export var horizontal_speed = 30
