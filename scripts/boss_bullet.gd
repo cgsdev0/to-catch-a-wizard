@@ -76,7 +76,6 @@ func explode():
 	$CollisionShape2D.set_deferred("disabled", true)
 	expl.global_position = global_position
 	expl.get_node("CPUParticles2D").emitting = true
-	Events.emit_signal("shake")
 	get_parent().add_child(expl)
 	velocity = Vector2.ZERO
 	Events.emit_signal("boss_bullet_down")
@@ -98,6 +97,8 @@ func move(delta):
 	var coll = move_and_collide(velocity * delta)
 	if coll != null && !spent:
 		explode()
+		if coll.collider.has_method("kill_player"):
+			coll.collider.kill_player()
 		if coll.collider.has_method("explode"):
 			coll.collider.explode()
 		

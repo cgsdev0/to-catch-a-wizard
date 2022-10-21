@@ -1,4 +1,4 @@
-[gd_scene load_steps=176 format=2]
+[gd_scene load_steps=180 format=2]
 
 [ext_resource path="res://scripts/pixel_scale.gd" type="Script" id=1]
 [ext_resource path="res://fonts/equipment-pro-v1.1/equipment_pro.tres" type="DynamicFont" id=2]
@@ -45,6 +45,7 @@
 [ext_resource path="res://sprites/props/torch_off1.png" type="Texture" id=43]
 [ext_resource path="res://sprites/player/walking.png" type="Texture" id=44]
 [ext_resource path="res://sounds/boss_hurt_brick2.wav" type="AudioStream" id=45]
+[ext_resource path="res://health_bar.gd" type="Script" id=46]
 
 [sub_resource type="RectangleShape2D" id=181]
 extents = Vector2( 5, 17 )
@@ -380,7 +381,7 @@ tracks/0/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=231]
-extents = Vector2( 6.5, 12 )
+extents = Vector2( 6.5, 9.5 )
 
 [sub_resource type="Animation" id=236]
 resource_name = "teleport"
@@ -396,6 +397,134 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=240]
+resource_name = "fadeout"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("HealthBar:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("HealthBar:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1.51572, 1 ),
+"update": 0,
+"values": [ 12.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HealthBar:min_width")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("../AnimatedSprite:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.7 ),
+"transitions": PoolRealArray( 0.535887, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("../Ow:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.8, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("../Label:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.8, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=239]
+resource_name = "fill"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("HealthBar:value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.1, 4 ),
+"transitions": PoolRealArray( 1, 0.406126, 0.554785 ),
+"update": 0,
+"values": [ 0.0, 0.0, 15.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("HealthBar:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.6, 2.4 ),
+"transitions": PoolRealArray( 1, 0.535887, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HealthBar:min_width")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 3.8, 4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0, 2.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HealthBar:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1.4, 2.2 ),
+"transitions": PoolRealArray( 1, 0.466516, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0, 12.0 ]
 }
 
 [sub_resource type="Animation" id=237]
@@ -425,6 +554,35 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=238]
+resource_name = "hurt2"
+length = 0.3
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimatedSprite:offset")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.05, 0.11, 0.23, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -12 ), Vector2( -4, -12 ), Vector2( 4, -12 ), Vector2( 0, -12 ) ]
 }
 
 [sub_resource type="AtlasTexture" id=64]
@@ -803,7 +961,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="BootsPickup2"]
 frames = SubResource( 152 )
-frame = 14
+frame = 12
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BootsPickup2"]
@@ -820,7 +978,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key1"]
 frames = SubResource( 202 )
-frame = 11
+frame = 9
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key1"]
@@ -836,7 +994,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Key2"]
 frames = SubResource( 202 )
-frame = 10
+frame = 8
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Key2"]
@@ -854,7 +1012,7 @@ description = "An effortless burst of speed.\\nPress 'shift', 'x', or 'z' to use
 
 [node name="DashPickup" type="AnimatedSprite" parent="DashPickup"]
 frames = SubResource( 173 )
-frame = 17
+frame = 15
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DashPickup"]
@@ -870,7 +1028,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="FireballPickup"]
 frames = SubResource( 173 )
-frame = 16
+frame = 14
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FireballPickup"]
@@ -887,7 +1045,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="LavaPickup"]
 frames = SubResource( 173 )
-frame = 16
+frame = 14
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LavaPickup"]
@@ -937,9 +1095,8 @@ text = "oww"
 autowrap = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Boss"]
-position = Vector2( 0, -7 )
+position = Vector2( 0, -9.0347 )
 frames = SubResource( 229 )
-frame = 1
 playing = true
 offset = Vector2( 0, -12 )
 
@@ -950,7 +1107,7 @@ method_call_mode = 1
 anims/hover = SubResource( 230 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boss"]
-position = Vector2( 1, -19 )
+position = Vector2( 1, -16.5 )
 shape = SubResource( 231 )
 
 [node name="TeleportSound" type="AudioStreamPlayer2D" parent="Boss"]
@@ -965,11 +1122,31 @@ max_distance = 4000.0
 [node name="InvisPlayer" type="AnimationPlayer" parent="Boss"]
 anims/teleport = SubResource( 236 )
 
+[node name="CanvasLayer" type="CanvasLayer" parent="Boss"]
+layer = 15
+
+[node name="HealthBar" type="Node2D" parent="Boss/CanvasLayer"]
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( 517, 0 )
+script = ExtResource( 46 )
+width = 140.0
+height = 4.0
+fg_color = Color( 0.705882, 0.164706, 0.164706, 1 )
+bg_color = Color( 0.294118, 0.027451, 0.027451, 1 )
+value = 0.0
+max_value = 15.0
+min_width = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Boss/CanvasLayer"]
+anims/fadeout = SubResource( 240 )
+anims/fill = SubResource( 239 )
+
 [node name="HurtAnimation" type="AnimationPlayer" parent="Boss"]
 anims/hurt = SubResource( 237 )
+anims/hurt2 = SubResource( 238 )
 
 [node name="Player" type="KinematicBody2D" parent="."]
-collision_layer = 8818815
+collision_layer = 8556671
 collision_mask = 32847
 script = ExtResource( 4 )
 respawn_from_boss = Vector2( -6, 400 )
@@ -1369,6 +1546,7 @@ position = Vector2( -254, 262 )
 collision_layer = 65536
 collision_mask = 0
 script = ExtResource( 25 )
+direction = Vector2( 1, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BrickSpawner2"]
 shape = SubResource( 234 )

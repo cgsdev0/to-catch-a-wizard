@@ -333,6 +333,7 @@ func _physics_process(delta: float):
 	#    position.x = max_x - get_viewport_rect().size.x / 2
 
 var boss
+	
 func _ready():
 	boss = get_tree().get_root().find_node("Boss", true, false)
 	init_global = global_position

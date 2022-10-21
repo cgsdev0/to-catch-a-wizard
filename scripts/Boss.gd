@@ -65,21 +65,27 @@ var phase2health = 0
 
 func reset_boss():
 	phase = 1
-	brick_health = 6
+	brick_health = 1
 	global_position = init_global
 	x2 = init_x2
-	phase2health = 10
+	phase2health = 3 # 15
 	cooldown_timer1 = 0.0
 	$Ow.text = "oww"
 	$Ow.visible = false
 	$Label.visible = true
 	$AnimatedSprite.flip_h = false
 
+func _process(delta):
+	if !$CanvasLayer/AnimationPlayer.is_playing():
+		$CanvasLayer/HealthBar.value = phase2health
+	$CanvasLayer/HealthBar.visible = (phase >= 2)
+	
 func phase2():
 	if phase == 1:
-		
 		phase = 2
+		dmg_timer = -4.0
 		cooldown_timer = 0.0
+		$CanvasLayer/AnimationPlayer.play("fill")
 		$Ow.text = "enough of that!"
 		$Ow.visible = true
 		$Label.visible = false
@@ -89,7 +95,7 @@ func phase2():
 	else:
 		return
 	
-	position.x = floor((position.x + x2) / 2.0)
+	position.x = floor((position.x + x2) / 2.0) - 2
 	position.y -= 50
 	
 func _physics_process(delta):
@@ -134,22 +140,27 @@ func phase2attack(rage = false):
 	
 func phase2damage(attacker):
 	print(attacker)
-	if dmg_timer < dmg_cooldown || phase < 2 || phase2health == 0:
+	if dmg_timer < dmg_cooldown || phase < 2 || phase2health < 0:
 		return
+	$HurtAnimation.play("hurt2")
+	$BrickHitSound.play()
 	dmg_timer = 0.0
 	phase2health -= 1
 	phase2attack()
-	if phase2health <= 0:
+	if phase2health < 0:
 		phase = 3
-		visible = false
+		$Ow.text = "ARRRGGHHGH!!!"
+		$CanvasLayer/AnimationPlayer.play("fadeout")
+		Events.emit_signal("boss_dead")
 		Events.emit_signal("remove_boss_bullets")
 		for i in 8:
 			var expl = explosion_scene.instance()
 			expl.global_position = global_position + Vector2(rand.randf_range(-10, 10), rand.randf_range(-10, 10))
+			expl.global_position.y -= 8
 			expl.get_node("CPUParticles2D").emitting = true
 			Events.emit_signal("shake")
 			get_parent().add_child(expl)
-			yield(get_tree().create_timer(0.8), "timeout")
+			yield(get_tree().create_timer(0.65), "timeout")
 		yield(get_tree().create_timer(1.2), "timeout")
 		Events.emit_signal("you_win")
 		

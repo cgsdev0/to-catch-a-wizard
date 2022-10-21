@@ -92,3 +92,10 @@ func move(delta):
 		
 #	rewind_state["position"].append(position)
 #	rewind_state["done_exploding"].append(done_exploding)
+
+
+func _on_Area2D_body_entered(body):
+	if !spent:
+		explode()
+		if body.has_method("explode"):
+			body.explode()

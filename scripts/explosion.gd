@@ -29,8 +29,6 @@ func on_body_enter(body):
 	elif body.has_method("phase2damage") && !hasHitBoss && !should_kill_player:
 		hasHitBoss = true
 		body.phase2damage(self)
-	elif body.has_method("kill_player") && should_kill_player:
-		body.kill_player()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

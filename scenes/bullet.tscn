@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://sounds/fireball_launch.wav" type="AudioStream" id=1]
 [ext_resource path="res://scripts/bullet.gd" type="Script" id=2]
@@ -6,6 +6,9 @@
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 20.0
+
+[sub_resource type="CircleShape2D" id=10]
+radius = 54.7264
 
 [sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
@@ -46,12 +49,19 @@ _data = [ Vector2( 0.0600601, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.924925, 0.436364 )
 [node name="Sprite" type="KinematicBody2D"]
 scale = Vector2( 0.201, 0.201 )
 z_index = 10
-collision_layer = 458753
-collision_mask = 327681
+collision_layer = 196609
+collision_mask = 327745
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 262144
+
+[node name="ProjectileCollider" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 10 )
 
 [node name="Particles" type="Node2D" parent="."]
 
@@ -89,3 +99,5 @@ scale_amount_curve = SubResource( 7 )
 
 [node name="LaunchSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 1 )
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]

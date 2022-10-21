@@ -6,6 +6,9 @@ extends RigidBody2D
 # var b = "text"
 
 onready var rand = RandomNumberGenerator.new()
+var bounced = false
+var pls_bounce = false
+var bounce_direction = Vector2.LEFT
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$AnimationPlayer.play("fadeout")
@@ -13,9 +16,17 @@ func _ready():
 	rand.randomize()
 	rotation_degrees = rand.randf_range(0, 360)
 
+func _physics_process(delta):
+	if pls_bounce && !bounced:
+		bounced = true
+		self.apply_impulse(Vector2.ZERO, (bounce_direction + Vector2.UP) * 100)
+		
 func on_body_enter(body):
 	if body.has_method("take_damage"):
 		body.take_damage()
+		if !pls_bounce:
+			pls_bounce = true
+			
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
