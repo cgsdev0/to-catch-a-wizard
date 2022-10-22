@@ -13,6 +13,7 @@ varying vec2 world_position;
 void vertex()
 {
 	world_position = (WORLD_MATRIX * (EXTRA_MATRIX * vec4(VERTEX, 0.0, 1.0))).xy;
+	VERTEX.y += sin(VERTEX.x + TIME * 2.0);
 }
 
 void fragment() {
