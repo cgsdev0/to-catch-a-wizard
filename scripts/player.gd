@@ -120,7 +120,7 @@ func lava_enter():
 var speedrun_timer = null
 
 func _process(delta):
-	var rel_pos = global_position - (camera.get_camera_screen_center() - Vector2(160, 100))
+	var rel_pos = global_position - (camera.get_camera_screen_center() - get_viewport().size / 2)
 	lava.material.set_shader_param("enabled", has_lava_imm)
 	lava.material.set_shader_param("player_position", rel_pos)
 	lava.material.set_shader_param("global_transform", lava.get_global_transform())

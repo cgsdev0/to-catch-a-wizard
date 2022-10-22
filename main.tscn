@@ -1044,7 +1044,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="Level/BootsPickup2"]
 frames = SubResource( 152 )
-frame = 10
+frame = 11
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/BootsPickup2"]
@@ -1061,7 +1061,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Level/Key1"]
 frames = SubResource( 202 )
-frame = 7
+frame = 8
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Key1"]
@@ -1077,7 +1077,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Level/Key2"]
 frames = SubResource( 202 )
-frame = 6
+frame = 7
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Key2"]
@@ -1095,7 +1095,7 @@ description = "An effortless burst of speed.\\nPress 'shift', 'x', or 'z' to use
 
 [node name="DashPickup" type="AnimatedSprite" parent="Level/DashPickup"]
 frames = SubResource( 173 )
-frame = 13
+frame = 14
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/DashPickup"]
@@ -1113,7 +1113,7 @@ description = "All of the pages just say\\n\"DANCE, MAGIC DANCE\"..."
 
 [node name="DashPickup" type="AnimatedSprite" parent="Level/SecretPickup"]
 frames = SubResource( 173 )
-frame = 12
+frame = 13
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/SecretPickup"]
@@ -1129,7 +1129,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="Level/FireballPickup"]
 frames = SubResource( 173 )
-frame = 12
+frame = 13
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/FireballPickup"]
@@ -1146,7 +1146,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="Level/LavaPickup"]
 frames = SubResource( 173 )
-frame = 12
+frame = 13
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/LavaPickup"]
@@ -1184,6 +1184,7 @@ autowrap = true
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Level/Boss"]
 position = Vector2( 0, -9.0347 )
 frames = SubResource( 229 )
+frame = 6
 playing = true
 offset = Vector2( 0, -12 )
 
@@ -1227,7 +1228,7 @@ layer = 15
 
 [node name="HealthBar" type="Node2D" parent="Level/Boss/CanvasLayer"]
 modulate = Color( 1, 1, 1, 0 )
-position = Vector2( 678, 0 )
+position = Vector2( 629, 0 )
 script = ExtResource( 46 )
 width = 140.0
 height = 4.0
