@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+
+<head>
+    <style>
+        * {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .opt {
+            height: 100%;
+            transform: skew(-20deg);
+            flex-grow: 1;
+            transition: flex-grow 0.3s ease, background-color 0.4s ease;
+            cursor: pointer;
+        }
+
+        .opt:hover {
+            flex-grow: 1.11;
+        }
+
+        #text {
+            display: flex;
+            z-index: 10;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        #text div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            flex-grow: 1;
+            font-size: 46px;
+            opacity: 50%;
+            transition: opacity 0.6s;
+            font-weight: bold;
+            font-family: Tahoma;
+            text-align: center;
+            color: white;
+            text-shadow: 0 1px 0 #ccc,
+                0 2px 0 #c9c9c9,
+                0 3px 0 #bbb,
+                0 4px 0 #b9b9b9,
+                0 5px 0 #aaa,
+                0 6px 1px rgba(0, 0, 0, .1),
+                0 0 5px rgba(0, 0, 0, .1),
+                0 1px 3px rgba(0, 0, 0, .3),
+                0 3px 5px rgba(0, 0, 0, .2),
+                0 5px 10px rgba(0, 0, 0, .25),
+                0 10px 10px rgba(0, 0, 0, .2),
+                0 20px 20px rgba(0, 0, 0, .15);
+        }
+
+        #text div p {
+            text-shadow: none;
+            color: #b9b9b9;
+            font-size: 16pt;
+        }
+
+        #text .opaque {
+            opacity: 100%;
+        }
+
+        #text .opaque div {
+            opacity: 100%;
+        }
+
+        #jam {
+            background-color: #0a1930;
+        }
+
+        #jam:hover {
+            background-color: #143464;
+        }
+
+        #jam-text div {
+            position: absolute;
+            top: 30vh;
+        }
+
+        #postjam {
+            background-color: #48234d;
+        }
+
+        #postjam:hover {
+            background-color: #793a80;
+        }
+
+        #postjam-text div {
+            position: absolute;
+            bottom: 30vh;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        #container {
+            width: 200vw;
+            margin-left: -50vw;
+            height: 100vh;
+            display: flex;
+            gap: 12px;
+            background-color: #888;
+            transition: background-color 0.4s;
+        }
+
+        #container:hover {
+            background-color: white;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = () => {
+            document.querySelector("#jam").addEventListener('mouseenter', () => document.querySelector("#jam-text").classList.add("opaque"))
+            document.querySelector("#jam").addEventListener('mouseleave', () => document.querySelector("#jam-text").classList.remove("opaque"))
+            document.querySelector("#postjam").addEventListener('mouseenter', () => document.querySelector("#postjam-text").classList.add("opaque"))
+            document.querySelector("#postjam").addEventListener('mouseleave', () => document.querySelector("#postjam-text").classList.remove("opaque"))
+        }
+    </script>
+</head>
+
+<body>
+    <div id="text">
+        <div id="jam-text">
+            <div>COMPO<p>Created in 48 hours</p>
+            </div>
+        </div>
+        <div id="postjam-text">
+            <div>POST-JAM<p>More content, better experience</p>
+            </div>
+        </div>
+    </div>
+    <div id="container">
+        <div id="jam" class="opt" onclick="window.location.href = 'jam/index.html'">&nbsp;</div>
+        <div id="postjam" class="opt" onclick="window.location.href = 'postjam/index.html'">&nbsp;</div>
+    </div>
+</body>
+
+</html>
