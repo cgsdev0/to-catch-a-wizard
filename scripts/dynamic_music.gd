@@ -23,6 +23,23 @@ func on_rewind_end():
 	$Reverse.stream_paused = true
 	save_state()
 
+var faded = false
+func on_boss_enter():
+	if !faded:
+		faded = true
+		$Crossfader.play("main_to_boss")
+		yield(get_tree().create_timer(0.1), "timeout")
+		$BossTrack.seek($Main.get_playback_position() / $Main.stream.get_length() * $BossTrack.stream.get_length())
+	elif !$BossTrack.playing:
+		$BossTrack.pitch_scale = 1.0
+		$BossTrack.volume_db = -5.0
+		$BossTrack.play()
+		
+func on_you_died():
+	$Crossfader.play("boss_fade_out")
+	
 func _ready():
+	Events.connect("boss_entry", self, "on_boss_enter")
 	Events.connect("rewind", self, "on_rewind")
+	Events.connect("you_died", self, "on_you_died")
 	Events.connect("rewind_end", self, "on_rewind_end")

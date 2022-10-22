@@ -12,5 +12,6 @@ func _ready():
 
 func on_body_enter(body):
 	body.bossFight = true
+	Events.emit_signal("boss_entry")
 	body.respawning = false
 

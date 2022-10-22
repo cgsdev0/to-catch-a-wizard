@@ -82,6 +82,7 @@ var respawning = false
 func kill_player():
 	if dead:
 		return
+	Events.emit_signal("you_died")
 	dead = true
 	Events.emit_signal("remove_boss_bullets")
 	$DeathSound.play()
