@@ -17,9 +17,19 @@ jobs:
         id: build
         uses: manleydev/build-godot-action@v1.4.1
         with:
-          name: wizards
+          name: index
           preset: ${{ matrix.platform }}
           debugMode: "false"
+      - name: Download compo version
+        uses: robinraju/release-downloader@v1.5
+        with: 
+          tag: "v0"
+          fileName: "compo-initial-build.zip"
+          out-file-path: "releases"
+      - run: mkdir -p ${{ github.workspace }}/${{ steps.build.outputs.build }}/jam && mkdir -p ${{ github.workspace }}/${{ steps.build.outputs.build }}/postjam
+      - run: cd ${{ github.workspace }}/${{ steps.build.outputs.build }}; find -type f . | xargs -L1 basename | xargs -L1 -I {} mv {} postjam/{}
+      - run: unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/${{ steps.build.outputs.build }}/jam
+      - run: cp launcher.html ${{ github.workspace }}/${{ steps.build.outputs.build }}/index.html
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
