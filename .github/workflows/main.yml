@@ -26,10 +26,14 @@ jobs:
           tag: "v0"
           fileName: "compo-initial-build.zip"
           out-file-path: "releases"
-      - run: mkdir -p ${{ github.workspace }}/${{ steps.build.outputs.build }}/jam && mkdir -p ${{ github.workspace }}/${{ steps.build.outputs.build }}/postjam
-      - run: cd ${{ github.workspace }}/${{ steps.build.outputs.build }}; find -type f . | xargs -L1 basename | xargs -L1 -I {} mv {} postjam/{}
-      - run: unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/${{ steps.build.outputs.build }}/jam
-      - run: cp launcher.html ${{ github.workspace }}/${{ steps.build.outputs.build }}/index.html
+      - name: repack bundle
+        run: |
+          sudo su
+          mkdir -p ${{ github.workspace }}/${{ steps.build.outputs.build }}/jam
+          mkdir -p ${{ github.workspace }}/${{ steps.build.outputs.build }}/postjam
+          cd ${{ github.workspace }}/${{ steps.build.outputs.build }}; find -type f . | xargs -L1 basename | xargs -L1 -I {} mv {} postjam/{}
+          unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/${{ steps.build.outputs.build }}/jam
+          cp launcher.html ${{ github.workspace }}/${{ steps.build.outputs.build }}/index.html
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
