@@ -19,6 +19,7 @@ func on_show_dialog(title, subtitle, description):
 	$Dialog/Background/MarginContainer/VBoxContainer/Description.text = description.c_unescape()
 	self.modulate = Color(1, 1, 1, 0)
 	$AnimationPlayer.play("Fade")
+	$PressEnterText/AnimationPlayer.play("flash")
 	self.visible = true
 
 func _input(event):

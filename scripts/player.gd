@@ -40,10 +40,11 @@ export var boots_gravity = 8
 export var max_y_speed = 220
 export var prone_slide_decel = 10
 export var jump_cooldown = 0.1
+export var lava_buoyancy = 70.0
 export var dash_cooldown = 0.2
 
 # Movement state
-enum MovementState {NORMAL, JUMPING_1, JUMPING_2, DASH}
+enum MovementState {NORMAL, JUMPING_1, JUMPING_2, DASH, SWIM}
 var movement_state = MovementState.NORMAL
 var last_moved_direction = 1
 var timer = 0
@@ -100,8 +101,20 @@ func kill_player():
 func play_pickup_key_sound():
 	$PickupKeySound.play()
 	
-func lava_death():
-	$DeathSound.play()
+var in_lava = false
+
+func lava_exit():
+	in_lava = false
+	
+func lava_enter():
+	in_lava = true
+	if !has_lava_imm:
+		yield(get_tree().create_timer(0.3), "timeout")
+		$DeathSound.play()
+		yield(get_tree().create_timer(0.2), "timeout")
+		rewind()
+	else:
+		pass
 	
 var speedrun_timer = null
 
@@ -170,9 +183,6 @@ func colorize(color: Color = Color(1, 1, 1, 1)):
 func _physics_process(delta: float):
 	if dead:
 		return
-	if has_lava_imm:
-		self.collision_layer = self.collision_layer & 0b011111111111111111011111;
-		self.collision_mask = self.collision_mask & 0b011111111111111111011111;
 		
 	velocity = move_and_slide(velocity, normal)
 	if rewinding:
@@ -232,7 +242,9 @@ func _physics_process(delta: float):
 			bullet.collision_mask |= 0b10000000000000000000
 			bullet.collision_layer |= 0b10000000000000000000
 		get_parent().add_child(bullet)
-	if movement_state != MovementState.DASH:
+	if in_lava:
+		velocity.y /= lava_buoyancy * delta
+	if movement_state != MovementState.DASH && !in_lava:
 		if has_boots:
 			velocity.y += boots_gravity * delta * 60
 		else:
@@ -248,19 +260,27 @@ func _physics_process(delta: float):
 	var prev_movement_state = movement_state
 
 	# State machine transitions
-	if is_on_floor():
+	if is_on_floor() || in_lava:
 		dash_cooldown_timer += delta
 		match movement_state:
 			MovementState.JUMPING_1, MovementState.JUMPING_2:
 				jump_cooldown_timer = 0
-				movement_state = MovementState.NORMAL
+				if in_lava:
+					movement_state = MovementState.SWIM
+				else:
+					movement_state = MovementState.NORMAL
 
 	else:
 		# Fall detection
 		match movement_state:
 			MovementState.NORMAL:
-				movement_state = MovementState.JUMPING_1
-
+				if in_lava:
+					movement_state = MovementState.SWIM
+				else: 
+					movement_state = MovementState.JUMPING_1
+	
+	if !in_lava && movement_state == MovementState.SWIM:
+		movement_state = MovementState.NORMAL
 	#if Input.is_action_just_pressed("ui_up") and movement_state == MovementState.JUMPING_1:
 	#	record()
 	#	velocity.y = -double_jump_speed
@@ -271,14 +291,21 @@ func _physics_process(delta: float):
 		record()
 		if jump_cooldown_timer >= jump_cooldown:
 			if has_boots:
-				velocity.y -= boots_jump_speed
+				velocity.y = -boots_jump_speed
 				$JumpSound.play()
 			else:
-				velocity.y -= jump_speed
+				velocity.y = -jump_speed
 				$WeakJumpSound.play()
 			movement_state = MovementState.JUMPING_1
+	if movement_state == MovementState.SWIM && has_lava_imm:
+		if Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_down"):
+			velocity.y = 0
+		if Input.is_action_pressed("ui_up"):
+			velocity.y -= boots_horizontal_speed
+		if Input.is_action_pressed("ui_down"):
+			velocity.y += boots_horizontal_speed
 	
-	if Input.is_action_just_pressed("dash") and has_dash and movement_state != MovementState.DASH:
+	if Input.is_action_just_pressed("dash") and has_dash and movement_state != MovementState.DASH and movement_state != MovementState.SWIM:
 		record()
 		if dash_cooldown_timer >= dash_cooldown:
 			$DashSound.play()
@@ -292,26 +319,32 @@ func _physics_process(delta: float):
 			dash_cooldown_timer = 0.0
 			dash_timer += delta
 			if dash_timer >= dash_duration:
-				movement_state = MovementState.NORMAL
-		MovementState.NORMAL, MovementState.JUMPING_1, MovementState.JUMPING_2:
+				if in_lava:
+					movement_state = MovementState.SWIM
+				else:
+					movement_state = MovementState.NORMAL
+		MovementState.NORMAL, MovementState.JUMPING_1, MovementState.JUMPING_2, MovementState.SWIM:
 			velocity.x = 0
-			if Input.is_action_pressed("ui_right"):
-				if has_boots:
-					velocity.x += boots_horizontal_speed
-				else:
-					velocity.x += horizontal_speed
-			if Input.is_action_pressed("ui_left"):
-				if has_boots:
-					velocity.x -= boots_horizontal_speed
-				else:
-					velocity.x -= horizontal_speed
-			if velocity.x != 0:
-				record()
-				last_moved_direction = sign(velocity.x)
+			if movement_state == MovementState.SWIM && !has_lava_imm:
+				pass
+			else:
+				if Input.is_action_pressed("ui_right"):
+					if has_boots:
+						velocity.x += boots_horizontal_speed
+					else:
+						velocity.x += horizontal_speed
+				if Input.is_action_pressed("ui_left"):
+					if has_boots:
+						velocity.x -= boots_horizontal_speed
+					else:
+						velocity.x -= horizontal_speed
+				if velocity.x != 0:
+					record()
+					last_moved_direction = sign(velocity.x)
 
 	# Handle animations
 	match movement_state:
-		MovementState.NORMAL:
+		MovementState.NORMAL, MovementState.SWIM:
 			if velocity.x != 0:
 				if has_boots:
 				#$Sprite.play("walking", last_moved_direction < 0)

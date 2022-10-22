@@ -29,7 +29,7 @@ _data = [ Vector2( 0.0600601, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.924925, 0.436364 )
 [node name="Sprite" type="KinematicBody2D"]
 scale = Vector2( 0.201, 0.201 )
 z_index = 10
-collision_layer = 131073
+collision_layer = 131105
 collision_mask = 262209
 script = ExtResource( 2 )
 

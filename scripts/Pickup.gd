@@ -22,7 +22,9 @@ func _ready():
 
 
 func _on_Pickup_body_entered(body):
-	if typeof(body[toggle]) == TYPE_BOOL:
+	if toggle == "":
+		pass
+	elif typeof(body[toggle]) == TYPE_BOOL:
 		body[toggle] = true
 	else:
 		body[toggle] += 1

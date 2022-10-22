@@ -93,7 +93,17 @@ func move(delta):
 #	rewind_state["position"].append(position)
 #	rewind_state["done_exploding"].append(done_exploding)
 
-
+func lava_enter():
+	spent = true
+	velocity = Vector2.ZERO;
+	$Particles/A.emitting = false
+	$Particles/B.emitting = false
+	set_deferred("collision_layer", 0)
+	set_deferred("collision_mask", 0)
+	$CollisionShape2D.set_deferred("disabled", true)
+	yield(get_tree().create_timer(1.0), "timeout")
+	queue_free()
+	
 func _on_Area2D_body_entered(body):
 	if !spent:
 		if body.has_method("light"):
