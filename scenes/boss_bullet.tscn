@@ -3,38 +3,20 @@
 [ext_resource path="res://scripts/boss_bullet.gd" type="Script" id=1]
 [ext_resource path="res://sounds/bossball_throw.wav" type="AudioStream" id=2]
 [ext_resource path="res://sprites/particles/fire_particle.png" type="Texture" id=3]
+[ext_resource path="res://shaders/boss_bullet_a.gdshader" type="Shader" id=4]
+[ext_resource path="res://shaders/boss_bullet_b.gdshader" type="Shader" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 20.0
 
-[sub_resource type="Shader" id=8]
-code = "shader_type canvas_item;
-
-void fragment() {
-	vec4 col = vec4(0.0, 0.4, 0.0, 1.0);
-	float a = texture(TEXTURE, UV).a;
-	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0) + col;
-	COLOR.a = round(a * 3.0) / 6.0;
-	
-}"
-
 [sub_resource type="ShaderMaterial" id=9]
-shader = SubResource( 8 )
+shader = ExtResource( 4 )
 
 [sub_resource type="Curve" id=6]
 _data = [ Vector2( 0, 0.871591 ), 0.0, 0.0, 0, 0, Vector2( 0.459459, 0.571591 ), 0.0, 0.0, 0, 0, Vector2( 0.867868, 0.171591 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="Shader" id=10]
-code = "shader_type canvas_item;
-
-void fragment() {
-	vec4 col = vec4(0.1, 1.1, 0.18, 1.0) * 2.0;
-	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0) + col;
-	COLOR.a = texture(TEXTURE, UV).a / 2.0; //read from texture
-}"
-
 [sub_resource type="ShaderMaterial" id=11]
-shader = SubResource( 10 )
+shader = ExtResource( 5 )
 
 [sub_resource type="Curve" id=7]
 _data = [ Vector2( 0.0600601, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.924925, 0.436364 ), -0.981818, 0.0, 0, 0 ]

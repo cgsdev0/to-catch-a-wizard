@@ -15,9 +15,7 @@ func _ready():
 	$CollisionShape2D.queue_free()
 	yield(get_tree().create_timer(2.0), "timeout")
 	queue_free()
-	
-	
-	pass # Replace with function body.
+
 
 var hasHitBoss = false
 

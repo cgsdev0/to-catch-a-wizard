@@ -99,6 +99,8 @@ func _on_Area2D_body_entered(body):
 		if body.has_method("light"):
 			body.light()
 			return
+		if body.has_method("spawn_bricks"):
+			body.spawn_bricks()
 		explode()
 		if body.has_method("explode"):
 			body.explode()

@@ -1,17 +1,24 @@
 extends KinematicBody2D
 
 
-export var has_boots = true
-export var has_dash = true
-export var has_fireball = true
-export var has_lava_imm = true
+export var has_boots = false
+export var has_dash = false
+export var has_fireball = false
+export var has_lava_imm = false
 
 export var respawn_from_boss = Vector2()
 
 var bossFight = false
 var wasBossFight = false
 
-export var keys = 2
+export var keys = 0
+
+func forcibly_reset_state():
+	has_boots = false
+	has_dash = false
+	has_fireball = false
+	has_lava_imm = false
+	keys = 0
 
 # Tweakable constants
 export var horizontal_speed = 30
@@ -99,6 +106,11 @@ func lava_death():
 var speedrun_timer = null
 
 func _process(delta):
+	lava.material.set_shader_param("enabled", has_lava_imm)
+	lava.material.set_shader_param("player_position", global_position)
+	lava.material.set_shader_param("global_transform", lava.get_global_transform())
+	print(lava.get_global_transform())
+
 	if speedrun_timer != null:
 		speedrun_timer += delta
 	
@@ -145,6 +157,7 @@ func compute_rewind(delta):
 	if rewind_state["position"].empty():
 		global_position = init_global
 		$CollisionShape2D.set_deferred("disabled", false)
+		Events.emit_signal("rewind_end")
 		rewinding = false
 		$RewindSound.stop()
 		print(rewind_delta)
@@ -333,8 +346,12 @@ func _physics_process(delta: float):
 	#    position.x = max_x - get_viewport_rect().size.x / 2
 
 var boss
-	
+
+var lava
 func _ready():
+	lava = get_parent().find_node("Lava")
+	if !OS.is_debug_build():
+		forcibly_reset_state()
 	boss = get_tree().get_root().find_node("Boss", true, false)
 	init_global = global_position
 # would be great to do this less poorly

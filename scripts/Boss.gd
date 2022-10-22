@@ -69,10 +69,10 @@ var phase2health = 0
 
 func reset_boss():
 	phase = 1
-	brick_health = 1
+	brick_health = 6
 	global_position = init_global
 	x2 = init_x2
-	phase2health = 3 # 15
+	phase2health = 12 # 15
 	cooldown_timer1 = 0.0
 	$Ow.text = "oww"
 	$Ow.visible = false

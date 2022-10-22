@@ -8,16 +8,6 @@
 
 config_version=4
 
-_global_script_classes=[ {
-"base": "Node",
-"class": "RewindableKinematicBody2D",
-"language": "GDScript",
-"path": "res://scripts/pixel_scale.gd"
-} ]
-_global_script_class_icons={
-"RewindableKinematicBody2D": ""
-}
-
 [application]
 
 config/name="LD51"
@@ -123,5 +113,4 @@ rewind={
 quality/driver/driver_name="GLES2"
 2d/snapping/use_gpu_pixel_snap=true
 environment/default_clear_color=Color( 0.133333, 0.25098, 0.309804, 1 )
-environment/default_environment="res://default_env.tres"
 quality/2d/use_pixel_snap=true

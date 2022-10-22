@@ -1,0 +1,32 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type canvas_item;
+
+uniform vec2 player_position;
+uniform float radius = 16.0;
+uniform bool enabled = false;
+uniform mat4 global_transform;
+
+varying vec2 world_position;
+
+void vertex()
+{
+	world_position = VERTEX;
+	//VERTEX = (WORLD_MATRIX * (EXTRA_MATRIX * vec4(VERTEX, 0.0, 1.0))).xy;
+}
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	COLOR.r = 0.0;
+	COLOR.b = 0.0;
+	if (enabled) {
+		COLOR.g = world_position.x / 260.0;
+//		if (world_position.x > 64.0) {
+//			COLOR.g = 1.0;
+//		}
+//		else {
+//			COLOR.b = 1.0;
+//		}
+	}
+}"

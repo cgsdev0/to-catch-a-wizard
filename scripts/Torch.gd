@@ -16,8 +16,13 @@ var rewind_state = {
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$Sprite.material.set_shader_param("position", global_position)
+	print($Sprite.material.get_shader_param("position"))
+	print(sin(global_position.dot(Vector2(12.9898,78.233))) * 3758.5453)
 	if lit:
 		$AnimatedSprite.play("on")
+		$Sprite.visible = true
+		$Smoke.emitting = true
 	else:
 		Events.connect("rewind", self, "on_rewind")
 		Events.connect("record", self, "on_record")
@@ -42,7 +47,9 @@ func compute_rewind(delta):
 	if rewind_state["lit"].empty():
 		lit = false
 		$AnimatedSprite.play("off")
+		$Sprite.visible = false
 		rewinding = false
+		$Smoke.emitting = false
 		return
 	var l = rewind_state["lit"].pop_back()
 	if !rewind_state["lit"].empty() && rewind_speed > 1:
@@ -53,15 +60,23 @@ func compute_rewind(delta):
 	if !l:
 		lit = false
 		$AnimatedSprite.play("off")
+		$Sprite.visible = false
+		$Smoke.emitting = false
 	if rewind_state["lit"].empty():
 		lit = false
 		$AnimatedSprite.play("off")
+		$Smoke.emitting = false
+		$Sprite.visible = false
 		rewinding = false
 		
 
 func light():
-	lit = true
-	$AnimatedSprite.play("on")
+	if !lit:
+		lit = true
+		$AnimatedSprite.play("on")
+		$Sprite.visible = true
+		$AudioStreamPlayer2D.play()
+		$Smoke.emitting = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
