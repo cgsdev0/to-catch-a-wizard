@@ -12,21 +12,19 @@ varying vec2 world_position;
 
 void vertex()
 {
-	world_position = VERTEX;
-	//VERTEX = (WORLD_MATRIX * (EXTRA_MATRIX * vec4(VERTEX, 0.0, 1.0))).xy;
+	world_position = (WORLD_MATRIX * (EXTRA_MATRIX * vec4(VERTEX, 0.0, 1.0))).xy;
 }
 
 void fragment() {
 	COLOR = texture(TEXTURE, UV);
-	COLOR.r = 0.0;
-	COLOR.b = 0.0;
 	if (enabled) {
-		COLOR.g = world_position.x / 260.0;
-//		if (world_position.x > 64.0) {
-//			COLOR.g = 1.0;
-//		}
-//		else {
-//			COLOR.b = 1.0;
-//		}
+//		COLOR.g = world_position.x / 260.0;
+		float dist = distance(world_position, player_position);
+		if (dist < radius) {
+			COLOR.a = 0.5 - (radius - dist) / (radius);
+		} else {
+			float gain = min((dist - radius) / 10.0, 1.0);
+			COLOR /= gain;
+		}
 	}
 }"

@@ -17,8 +17,6 @@ var rewind_state = {
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Sprite.material.set_shader_param("position", global_position)
-	print($Sprite.material.get_shader_param("position"))
-	print(sin(global_position.dot(Vector2(12.9898,78.233))) * 3758.5453)
 	if lit:
 		$AnimatedSprite.play("on")
 		$Sprite.visible = true

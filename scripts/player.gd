@@ -106,10 +106,10 @@ func lava_death():
 var speedrun_timer = null
 
 func _process(delta):
+	var rel_pos = global_position - (camera.get_camera_screen_center() - Vector2(160, 100))
 	lava.material.set_shader_param("enabled", has_lava_imm)
-	lava.material.set_shader_param("player_position", global_position)
+	lava.material.set_shader_param("player_position", rel_pos)
 	lava.material.set_shader_param("global_transform", lava.get_global_transform())
-	print(lava.get_global_transform())
 
 	if speedrun_timer != null:
 		speedrun_timer += delta
@@ -160,7 +160,6 @@ func compute_rewind(delta):
 		Events.emit_signal("rewind_end")
 		rewinding = false
 		$RewindSound.stop()
-		print(rewind_delta)
 		recording = null
 	
 
@@ -348,8 +347,10 @@ func _physics_process(delta: float):
 var boss
 
 var lava
+var camera
 func _ready():
 	lava = get_parent().find_node("Lava")
+	camera = get_parent().find_node("Camera2D")
 	if !OS.is_debug_build():
 		forcibly_reset_state()
 	boss = get_tree().get_root().find_node("Boss", true, false)

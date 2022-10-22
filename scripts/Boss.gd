@@ -149,7 +149,6 @@ func phase2attack(rage = false):
 	get_parent().add_child(bullet)
 	
 func phase2damage(attacker):
-	print(attacker)
 	if dmg_timer < dmg_cooldown || phase < 2 || phase2health < 0:
 		return
 	$HurtAnimation.play("hurt2")
