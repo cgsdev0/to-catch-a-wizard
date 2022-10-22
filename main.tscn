@@ -35,6 +35,7 @@
 [ext_resource path="res://scripts/game_win.gd" type="Script" id=33]
 [ext_resource path="res://fonts/ui_theme.tres" type="Theme" id=34]
 [ext_resource path="res://fonts/m3x6.tres" type="DynamicFont" id=35]
+[ext_resource path="res://sprites/tiles/lava_texture.tres" type="Texture" id=36]
 [ext_resource path="res://sprites/props/fall1.png" type="Texture" id=37]
 [ext_resource path="res://sprites/pickups/spellbook.png" type="Texture" id=38]
 [ext_resource path="res://sprites/props/torch_door.png" type="Texture" id=39]
@@ -784,11 +785,9 @@ shader_param/radius = 16.0
 shader_param/enabled = false
 shader_param/global_transform = null
 
-[sub_resource type="ConvexPolygonShape2D" id=180]
-points = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
-
 [sub_resource type="TileSet" id=179]
 0/name = "lava_texture.tres 0"
+0/texture = ExtResource( 36 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 0, 0, 16, 16 )
@@ -797,16 +796,9 @@ points = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
 0/navigation_offset = Vector2( 0, 0 )
 0/shape_offset = Vector2( 0, 0 )
 0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape = SubResource( 180 )
 0/shape_one_way = false
-0/shape_one_way_margin = 1.0
-0/shapes = [ {
-"autotile_coord": Vector2( 0, 0 ),
-"one_way": false,
-"one_way_margin": 1.0,
-"shape": SubResource( 180 ),
-"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
-} ]
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
 0/z_index = 0
 
 [sub_resource type="RectangleShape2D" id=208]
@@ -921,7 +913,7 @@ description = "they make you feel young again!"
 
 [node name="BootsPickup" type="AnimatedSprite" parent="Level/BootsPickup2"]
 frames = SubResource( 152 )
-frame = 18
+frame = 4
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/BootsPickup2"]
@@ -938,7 +930,7 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Level/Key1"]
 frames = SubResource( 202 )
-frame = 15
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Key1"]
@@ -954,7 +946,6 @@ has_dialog = false
 
 [node name="Key1" type="AnimatedSprite" parent="Level/Key2"]
 frames = SubResource( 202 )
-frame = 14
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Key2"]
@@ -972,7 +963,7 @@ description = "An effortless burst of speed.\\nPress 'shift', 'x', or 'z' to use
 
 [node name="DashPickup" type="AnimatedSprite" parent="Level/DashPickup"]
 frames = SubResource( 173 )
-frame = 1
+frame = 7
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/DashPickup"]
@@ -988,6 +979,7 @@ description = "exactly what you'd expect.\\nLeft click to use."
 
 [node name="DashPickup" type="AnimatedSprite" parent="Level/FireballPickup"]
 frames = SubResource( 173 )
+frame = 6
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/FireballPickup"]
@@ -1004,6 +996,7 @@ description = "...also works on other hot things."
 
 [node name="DashPickup" type="AnimatedSprite" parent="Level/LavaPickup"]
 frames = SubResource( 173 )
+frame = 6
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Level/LavaPickup"]
@@ -1041,7 +1034,7 @@ autowrap = true
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Level/Boss"]
 position = Vector2( 0, -9.0347 )
 frames = SubResource( 229 )
-frame = 2
+frame = 5
 playing = true
 offset = Vector2( 0, -12 )
 
