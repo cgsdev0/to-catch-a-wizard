@@ -33,7 +33,7 @@ jobs:
           mkdir -p ${{ github.workspace }}/final-bundle/postjam
           ls -la ${{ github.workspace }}/${{ steps.build.outputs.build }}
           cd ${{ github.workspace }}/${{ steps.build.outputs.build }}
-          find -type f . | xargs -L1 basename | xargs -L1 -I {} cp {} ${{ github.workspace }}/final-bundle/postjam
+          find . -type f | xargs -L1 basename | xargs -L1 -I {} cp {} ${{ github.workspace }}/final-bundle/postjam
           unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/final-bundle/jam
           cp ${{ github.workspace }}/launcher.html ${{ github.workspace }}/final-bundle/index.html
       - name: Upload Artifact
