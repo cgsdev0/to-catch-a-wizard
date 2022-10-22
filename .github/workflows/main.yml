@@ -35,7 +35,7 @@ jobs:
           cd ${{ github.workspace }}/${{ steps.build.outputs.build }}
           find -type f . | xargs -L1 basename | xargs -L1 -I {} cp {} ${{ github.workspace }}/final-bundle/postjam
           unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/final-bundle/jam
-          cp launcher.html ${{ github.workspace }}/final-bundle/index.html
+          cp ${{ github.workspace }}/launcher.html ${{ github.workspace }}/final-bundle/index.html
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
