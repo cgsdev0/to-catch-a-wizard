@@ -29,7 +29,6 @@ jobs:
           out-file-path: "releases"
       - name: repack bundle
         run: |
-          sudo su
           mkdir -p ${{ github.workspace }}/final-bundle/jam
           mkdir -p ${{ github.workspace }}/final-bundle/postjam
           ls -la ${{ github.workspace }}/${{ steps.build.outputs.build }}
