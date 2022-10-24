@@ -21,32 +21,26 @@ jobs:
           mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
       - name: Linux Build
         run: godot -v --export "HTML5" ./build/index.html
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
+      - name: Download compo version
+        uses: robinraju/release-downloader@v1.5
+        with: 
+          tag: "v0"
+          fileName: "compo-initial-build.zip"
+          out-file-path: "releases"
+      - name: repack bundle
+        run: |
+          sudo su
+          mkdir -p ${{ github.workspace }}/final-bundle/jam
+          mkdir -p ${{ github.workspace }}/final-bundle/postjam
+          ls -la ${{ github.workspace }}/${{ steps.build.outputs.build }}
+          cd ${{ github.workspace }}/${{ steps.build.outputs.build }}
+          find . -type f | xargs -L1 basename | xargs -L1 -I {} cp {} ${{ github.workspace }}/final-bundle/postjam
+          unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/final-bundle/jam
+          cp ${{ github.workspace }}/launcher.html ${{ github.workspace }}/final-bundle/index.html
+      - uses: KikimoraGames/itch-publish@v0.0.3
         with:
-          name: DOES-IT-WORK
-          path: ./build/
-
-#      - name: Download compo version
-#        uses: robinraju/release-downloader@v1.5
-#        with: 
-#          tag: "v0"
-#          fileName: "compo-initial-build.zip"
-#          out-file-path: "releases"
-#      - name: repack bundle
-#        run: |
-#          sudo su
-#          mkdir -p ${{ github.workspace }}/final-bundle/jam
-#          mkdir -p ${{ github.workspace }}/final-bundle/postjam
-#          ls -la ${{ github.workspace }}/${{ steps.build.outputs.build }}
-#          cd ${{ github.workspace }}/${{ steps.build.outputs.build }}
-#          find . -type f | xargs -L1 basename | xargs -L1 -I {} cp {} ${{ github.workspace }}/final-bundle/postjam
-#          unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/final-bundle/jam
-#          cp ${{ github.workspace }}/launcher.html ${{ github.workspace }}/final-bundle/index.html
-#      - uses: KikimoraGames/itch-publish@v0.0.3
-#        with:
-#          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
-#          gameData: ${{ github.workspace }}/final-bundle
-#          itchUsername: badcop
-#          itchGameId: to-catch-a-wizard
-#          buildChannel: release
+          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
+          gameData: ${{ github.workspace }}/final-bundle
+          itchUsername: badcop
+          itchGameId: to-catch-a-wizard
+          buildChannel: release
