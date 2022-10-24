@@ -3,43 +3,50 @@ name: Build Godot Project
 on:
   workflow_dispatch: {}
 
+env:
+  GODOT_VERSION: 3.5.1
+  
 jobs:
   Godot:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform: [HTML5]
+    container:
+      image: docker://barichello/godot-ci:${{ GODOT_VERSION }}
     steps:
       - uses: actions/checkout@v2
         with:
           lfs: true
-      - name: Build
-        id: build
-        uses: manleydev/build-godot-action@v1.4.1
-        with:
-          name: index
-          preset: ${{ matrix.platform }}
-          debugMode: "false"
-      - name: Download compo version
-        uses: robinraju/release-downloader@v1.5
-        with: 
-          tag: "v0"
-          fileName: "compo-initial-build.zip"
-          out-file-path: "releases"
-      - name: repack bundle
+      - name: Setup
         run: |
-          sudo su
-          mkdir -p ${{ github.workspace }}/final-bundle/jam
-          mkdir -p ${{ github.workspace }}/final-bundle/postjam
-          ls -la ${{ github.workspace }}/${{ steps.build.outputs.build }}
-          cd ${{ github.workspace }}/${{ steps.build.outputs.build }}
-          find . -type f | xargs -L1 basename | xargs -L1 -I {} cp {} ${{ github.workspace }}/final-bundle/postjam
-          unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/final-bundle/jam
-          cp ${{ github.workspace }}/launcher.html ${{ github.workspace }}/final-bundle/index.html
-      - uses: KikimoraGames/itch-publish@v0.0.3
+          mkdir -v -p build ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Linux Build
+        run: godot -v --export "HTML5" ./build/index.html
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
         with:
-          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
-          gameData: ${{ github.workspace }}/final-bundle
-          itchUsername: badcop
-          itchGameId: to-catch-a-wizard
-          buildChannel: release
+          name: web
+          path: ./build/web/
+
+#      - name: Download compo version
+#        uses: robinraju/release-downloader@v1.5
+#        with: 
+#          tag: "v0"
+#          fileName: "compo-initial-build.zip"
+#          out-file-path: "releases"
+#      - name: repack bundle
+#        run: |
+#          sudo su
+#          mkdir -p ${{ github.workspace }}/final-bundle/jam
+#          mkdir -p ${{ github.workspace }}/final-bundle/postjam
+#          ls -la ${{ github.workspace }}/${{ steps.build.outputs.build }}
+#          cd ${{ github.workspace }}/${{ steps.build.outputs.build }}
+#          find . -type f | xargs -L1 basename | xargs -L1 -I {} cp {} ${{ github.workspace }}/final-bundle/postjam
+#          unzip ${{ github.workspace }}/releases/compo-initial-build.zip -d ${{ github.workspace }}/final-bundle/jam
+#          cp ${{ github.workspace }}/launcher.html ${{ github.workspace }}/final-bundle/index.html
+#      - uses: KikimoraGames/itch-publish@v0.0.3
+#        with:
+#          butlerApiKey: ${{secrets.BUTLER_API_KEY}}
+#          gameData: ${{ github.workspace }}/final-bundle
+#          itchUsername: badcop
+#          itchGameId: to-catch-a-wizard
+#          buildChannel: release
