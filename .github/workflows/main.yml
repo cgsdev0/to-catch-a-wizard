@@ -30,6 +30,7 @@ jobs:
           out-file-path: "releases"
       - name: repack bundle
         run: |
+          ls -la
           mkdir -p ./final-bundle/jam
           mkdir -p ./final-bundle/postjam
           ls -la ./build
@@ -37,7 +38,7 @@ jobs:
           find . -type f | xargs -L1 basename | xargs -L1 -I {} cp {} ../final-bundle/postjam
           cd ..
           unzip ./releases/compo-initial-build.zip -d ./final-bundle/jam
-          cp ${{ github.workspace }}/launcher.html ./final-bundle/index.html
+          cp ./launcher.html ./final-bundle/index.html
       - uses: KikimoraGames/itch-publish@v0.0.3
         with:
           butlerApiKey: ${{secrets.BUTLER_API_KEY}}
