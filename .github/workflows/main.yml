@@ -10,7 +10,7 @@ jobs:
   Godot:
     runs-on: ubuntu-latest
     container:
-      image: docker://barichello/godot-ci:${{ GODOT_VERSION }}
+      image: docker://barichello/godot-ci:3.5.1
     steps:
       - uses: actions/checkout@v2
         with:
