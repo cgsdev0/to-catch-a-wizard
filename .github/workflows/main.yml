@@ -24,8 +24,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
-          name: web
-          path: ./build/web/
+          name: DOES-IT-WORK
+          path: ./build/
 
 #      - name: Download compo version
 #        uses: robinraju/release-downloader@v1.5
